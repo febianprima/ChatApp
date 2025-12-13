@@ -49,7 +49,7 @@ export function Touchable({
       disabled={disabled}
       underlayColor={underlayColor}
       style={[styles.container, style]}>
-       <View>{children}</View>
+      <View>{children}</View>
     </TouchableHighlight>
   );
 }
@@ -59,4 +59,3 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
 });
-

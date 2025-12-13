@@ -14,4 +14,3 @@ export const getLastPost = (posts: chat.Post[]): chat.Post | undefined => {
     return currentDate > latestDate ? current : latest;
   });
 };
-

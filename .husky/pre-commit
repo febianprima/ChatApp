@@ -1,0 +1,9 @@
+#!/bin/sh
+
+echo "📝 Formatting staged files..."
+
+# Format and fix only staged files
+yarn lint-staged || exit 1
+
+echo "✅ Formatting complete!"
+

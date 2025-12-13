@@ -1,15 +1,15 @@
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { memo } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
 import { Shimmer, Touchable } from '../../global/components';
 import { colors } from '../../global/constants';
-
 import { formatDate } from '../../global/utils';
 import { ChatStackParamList } from '../navigation/ChatStackNavigator';
+
 import useGetUserPosts from '../queries/useGetUserPosts';
+
 import { ChatListItemContentSkeleton } from './ChatListItemContentSkeleton';
 
 interface ChatListItemProps {
@@ -17,8 +17,7 @@ interface ChatListItemProps {
 }
 
 const ChatListItem = memo(({ data }: ChatListItemProps) => {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<ChatStackParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<ChatStackParamList>>();
   const { id: userId, name, avatar } = data;
 
   const { lastPost, isLoading } = useGetUserPosts({ userId });

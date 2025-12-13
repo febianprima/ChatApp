@@ -13,13 +13,7 @@ interface ShimmerProps {
   style?: ViewStyle;
 }
 
-export function Shimmer({
-  width,
-  height,
-  shape = 'rectangle',
-  borderRadius,
-  style,
-}: ShimmerProps) {
+export function Shimmer({ width, height, shape = 'rectangle', borderRadius, style }: ShimmerProps) {
   const opacity = useRef(new Animated.Value(0.3)).current;
 
   useEffect(() => {
@@ -80,4 +74,3 @@ const styles = StyleSheet.create({
     backgroundColor: colors.border,
   },
 });
-

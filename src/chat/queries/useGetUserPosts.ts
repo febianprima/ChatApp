@@ -1,22 +1,24 @@
-import { useQuery } from "@tanstack/react-query";
-import { BASE_URL } from "../../global/constants/api";
-import { getLastPost } from "../utils";
+import { useQuery } from '@tanstack/react-query';
+
+import { BASE_URL } from '../../global/constants/api';
+
+import { getLastPost } from '../utils';
 
 const fetchUserPosts = async ({ userId }: { userId: number }) => {
-    try{
-  const response:Response = await fetch(`${BASE_URL}/users/${userId}/posts`);
+  try {
+    const response: Response = await fetch(`${BASE_URL}/users/${userId}/posts`);
 
-  if(!response.ok){
-    throw new Error('Failed to fetch user posts');
+    if (!response.ok) {
+      throw new Error('Failed to fetch user posts');
+    }
+
+    const postsData: chat.FetchPostsResponse = await response.json();
+
+    return postsData;
+  } catch (error) {
+    console.error('Error fetching user posts:', error);
+    throw error;
   }
-
-  const postsData: chat.FetchPostsResponse = await response.json();
-
-  return postsData;
-} catch (error) {
-  console.error('Error fetching user posts:', error);
-  throw error;
-}
 };
 
 const useGetUserPosts = ({ userId }: { userId: number }) => {
