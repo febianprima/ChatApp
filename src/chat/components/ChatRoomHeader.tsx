@@ -11,6 +11,8 @@ import useGetUser from '../queries/useGetUser';
 import useGetUserPosts from '../queries/useGetUserPosts';
 import { useChatStore } from '../store/useChatStore';
 
+import ChatRoomHeaderSkeleton from './ChatRoomHeaderSkeleton';
+
 function ChatRoomHeader({ navigation }: NativeStackHeaderProps) {
   const formatDate = useFormatDate();
   const { contactUserId } = useChatStore();
@@ -30,7 +32,7 @@ function ChatRoomHeader({ navigation }: NativeStackHeaderProps) {
   };
 
   if (isUserDataLoading || isPostDataLoading) {
-    return null;
+    return <ChatRoomHeaderSkeleton navigation={navigation} />;
   }
 
   if (!lastPost || !userData) {
@@ -75,7 +77,7 @@ const styles = StyleSheet.create({
   avatar: {
     width: 32,
     height: 32,
-    borderRadius: 20,
+    borderRadius: 16,
   },
   name: {
     fontSize: 16,
