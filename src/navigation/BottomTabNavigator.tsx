@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   icon: {
-    fontSize: 24,
+    fontSize: 20,
   },
   iconFocused: {
     transform: [{ scale: 1.1 }],

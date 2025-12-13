@@ -1,4 +1,5 @@
 declare namespace chat {
+  //#region user type
   interface User {
     id: number;
     name: string;
@@ -18,5 +19,23 @@ declare namespace chat {
     limit: number;
     offset: number;
     results: User[];
+  }
+  //#endregion
+
+  //#region post type
+  interface Post {
+    id: number;
+    userId: number;
+    title: string;
+    body: string;
+    tags: string[];
+    category: string;
+    createdAt: string;
+  }
+  interface FetchPostsResponse {
+    total: number;
+    limit: number;
+    offset: number;
+    results: Post[];
   }
 }

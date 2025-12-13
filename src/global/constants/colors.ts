@@ -35,6 +35,7 @@ export const colors = {
   // Overlay
   overlay: 'rgba(0, 0, 0, 0.5)',
   overlayLight: 'rgba(0, 0, 0, 0.3)',
+  touchable: 'rgba(212,208,238,0.3)'
 } as const;
 
 export type ColorKey = keyof typeof colors;
