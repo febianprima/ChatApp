@@ -1,0 +1,25 @@
+#!/bin/sh
+
+echo "🔍 Running pre-push checks..."
+
+# Run Prettier format (auto-fix formatting and sort imports)
+echo "📝 Formatting code with Prettier..."
+yarn format || exit 1
+
+# Run ESLint with auto-fix
+echo "🔎 Running ESLint..."
+yarn lint:fix || exit 1
+
+# Run TypeScript compile check
+echo "🔨 Checking TypeScript compilation..."
+yarn typecheck || exit 1
+
+# Run tests only for affected files
+echo "🧪 Running tests for affected files..."
+yarn test:affected || exit 1
+
+# Stage any formatting changes
+git add -A
+
+echo "✅ All checks passed!"
+
