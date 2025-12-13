@@ -1,4 +1,16 @@
 declare namespace chat {
+  //#region store type
+  interface Store extends chat.State, chat.Actions {}
+
+  interface State {
+    contactUserId: User['id'];
+  }
+
+  interface Actions {
+    setContactUserId: (contactUserId: User['id']) => void;
+  }
+  //#endregion
+
   //#region user type
   interface User {
     id: number;
@@ -38,4 +50,5 @@ declare namespace chat {
     offset: number;
     results: Post[];
   }
+  //#endregion
 }

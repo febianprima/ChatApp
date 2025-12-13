@@ -1,108 +1,63 @@
 /**
- * Date formatter utility for international format
- * Uses Intl.DateTimeFormat for locale-aware formatting
+ * Date formatter utility
+ * Single smart formatter for all date display needs
+ * Supports dynamic timezone updates
  */
 
 type DateInput = string | number | Date;
 
 /**
- * Format date to international format (DD/MM/YYYY)
+ * Get current device timezone
  */
-export const formatDate = (date: DateInput): string => {
-  const d = new Date(date);
-  return new Intl.DateTimeFormat('en-GB', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-  }).format(d);
+export const getDeviceTimezone = (): string => {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone;
 };
 
 /**
- * Format date with time (DD/MM/YYYY HH:mm)
+ * Format date contextually based on recency:
+ * - Today: returns time only (HH:MM)
+ * - Yesterday: returns "Yesterday, HH:MM"
+ * - Older: returns "DD/MM/YYYY, HH:MM"
+ *
+ * @param date - Date to format
+ * @param timezone - Optional timezone (defaults to device timezone)
  */
-export const formatDateTime = (date: DateInput): string => {
-  const d = new Date(date);
-  return new Intl.DateTimeFormat('en-GB', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  }).format(d);
-};
-
-/**
- * Format date with full month name (DD Month YYYY)
- */
-export const formatDateLong = (date: DateInput): string => {
-  const d = new Date(date);
-  return new Intl.DateTimeFormat('en-GB', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  }).format(d);
-};
-
-/**
- * Format date with short month name (DD Mon YYYY)
- */
-export const formatDateShort = (date: DateInput): string => {
-  const d = new Date(date);
-  return new Intl.DateTimeFormat('en-GB', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  }).format(d);
-};
-
-/**
- * Format time only (HH:mm)
- */
-export const formatTime = (date: DateInput): string => {
-  const d = new Date(date);
-  return new Intl.DateTimeFormat('en-GB', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  }).format(d);
-};
-
-/**
- * Format relative time (e.g., "2 hours ago", "Yesterday")
- */
-export const formatRelativeTime = (date: DateInput): string => {
+export const formatDate = (date: DateInput, timezone: string = getDeviceTimezone()): string => {
   const d = new Date(date);
   const now = new Date();
-  const diffMs = now.getTime() - d.getTime();
-  const diffSeconds = Math.floor(diffMs / 1000);
-  const diffMinutes = Math.floor(diffSeconds / 60);
-  const diffHours = Math.floor(diffMinutes / 60);
-  const diffDays = Math.floor(diffHours / 24);
 
-  if (diffSeconds < 60) {
-    return 'Just now';
-  }
-  if (diffMinutes < 60) {
-    return `${diffMinutes}m ago`;
-  }
-  if (diffHours < 24) {
-    return `${diffHours}h ago`;
-  }
-  if (diffDays === 1) {
-    return 'Yesterday';
-  }
-  if (diffDays < 7) {
-    return `${diffDays}d ago`;
+  // Get start of today (midnight) in device timezone
+  const startOfToday = new Date(now);
+  startOfToday.setHours(0, 0, 0, 0);
+
+  // Get start of yesterday
+  const startOfYesterday = new Date(startOfToday);
+  startOfYesterday.setDate(startOfYesterday.getDate() - 1);
+
+  const timeString = new Intl.DateTimeFormat('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone: timezone,
+  }).format(d);
+
+  // If date is today
+  if (d >= startOfToday) {
+    return timeString;
   }
 
-  return formatDateShort(d);
-};
+  // If date is yesterday
+  if (d >= startOfYesterday && d < startOfToday) {
+    return `Yesterday, ${timeString}`;
+  }
 
-/**
- * Format to ISO 8601 format (YYYY-MM-DD)
- */
-export const formatISO = (date: DateInput): string => {
-  const d = new Date(date);
-  return d.toISOString().split('T')[0];
+  // Older than yesterday
+  const dateString = new Intl.DateTimeFormat('en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    timeZone: timezone,
+  }).format(d);
+
+  return `${dateString}, ${timeString}`;
 };

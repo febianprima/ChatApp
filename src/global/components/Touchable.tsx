@@ -48,8 +48,8 @@ export function Touchable({
       onLongPress={onLongPress}
       disabled={disabled}
       underlayColor={underlayColor}
-      style={[styles.container, style]}>
-      <View>{children}</View>
+      style={styles.container}>
+      <View style={style}>{children}</View>
     </TouchableHighlight>
   );
 }

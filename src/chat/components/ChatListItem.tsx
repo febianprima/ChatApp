@@ -5,8 +5,9 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 
 import { Shimmer, Touchable } from '../../global/components';
 import { colors } from '../../global/constants';
-import { formatDate } from '../../global/utils';
+import { useFormatDate } from '../../global/hooks';
 import { ChatStackParamList } from '../navigation/ChatStackNavigator';
+import { useChatStore } from '../store/useChatStore';
 
 import useGetUserPosts from '../queries/useGetUserPosts';
 
@@ -18,12 +19,15 @@ interface ChatListItemProps {
 
 const ChatListItem = memo(({ data }: ChatListItemProps) => {
   const navigation = useNavigation<NativeStackNavigationProp<ChatStackParamList>>();
+  const formatDate = useFormatDate();
   const { id: userId, name, avatar } = data;
 
   const { lastPost, isLoading } = useGetUserPosts({ userId });
+  const { setContactUserId } = useChatStore();
 
   const handlePress = () => {
-    navigation.navigate('Chat', { userId });
+    setContactUserId(userId);
+    navigation.navigate('ChatRoom');
   };
 
   // Show skeleton while loading

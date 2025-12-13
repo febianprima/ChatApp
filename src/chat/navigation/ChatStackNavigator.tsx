@@ -3,12 +3,13 @@ import React from 'react';
 
 import { colors } from '../../global/constants';
 
-import { ChatListScreen, ChatScreen, ProfileScreen } from '../screens';
+import ChatRoomHeader from '../components/ChatRoomHeader';
+import { ChatListScreen, ChatRoomScreen, ProfileScreen } from '../screens';
 
 export type ChatStackParamList = {
   ChatList: undefined;
-  Chat: { userId: number };
-  Profile: { userId: number };
+  ChatRoom: undefined;
+  Profile: undefined;
 };
 
 const Stack = createNativeStackNavigator<ChatStackParamList>();
@@ -28,7 +29,11 @@ export function ChatStackNavigator() {
         headerShadowVisible: true,
       }}>
       <Stack.Screen name="ChatList" component={ChatListScreen} options={{ title: 'Chats' }} />
-      <Stack.Screen name="Chat" component={ChatScreen} options={{ title: 'Chat' }} />
+      <Stack.Screen
+        name="ChatRoom"
+        component={ChatRoomScreen}
+        options={{ title: 'Chat', header: ChatRoomHeader }}
+      />
       <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
     </Stack.Navigator>
   );

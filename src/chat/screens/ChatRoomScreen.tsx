@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { colors } from '../../global/constants';
 
-export function ChatScreen() {
+export function ChatRoomScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Chat</Text>
