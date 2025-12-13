@@ -9,12 +9,13 @@ module.exports = {
   printWidth: 100,
   plugins: ['@trivago/prettier-plugin-sort-imports'],
   importOrder: [
-    // Group 1: External dependencies (handled by THIRD_PARTY_MODULES)
+    // Group 1: Third-party packages (npm dependencies)
     '<THIRD_PARTY_MODULES>',
-    // Group 2: Cross-module imports (src modules)
-    '^\\./src/(.*)$',
-    '^(\\.\\./)+(?:global|chat|settings|navigation|store|mocks)/(.*)$',
-    // Group 3: Internal module imports (relative within same module)
+    // Group 2: External module imports (2+ levels up = different src/ folder)
+    // e.g., from chat/components/ → ../../global/ is external
+    '^\\.\\./(\\.\\.)+',
+    // Group 3: Internal module imports (1 level up or same = within same src/ folder)
+    // e.g., from chat/components/ → ../queries/ is internal
     '^\\.\\./',
     '^\\.\/',
   ],

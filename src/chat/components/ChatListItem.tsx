@@ -6,10 +6,10 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import { Shimmer, Touchable } from '../../global/components';
 import { colors } from '../../global/constants';
 import { useFormatDate } from '../../global/hooks';
-import { ChatStackParamList } from '../navigation/ChatStackNavigator';
-import { useChatStore } from '../store/useChatStore';
 
+import { ChatStackParamList } from '../navigation/ChatStackNavigator';
 import useGetUserPosts from '../queries/useGetUserPosts';
+import { useChatStore } from '../store/useChatStore';
 
 import { ChatListItemContentSkeleton } from './ChatListItemContentSkeleton';
 

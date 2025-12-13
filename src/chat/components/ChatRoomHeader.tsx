@@ -6,10 +6,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors } from '../../global/constants';
 import { useFormatDate } from '../../global/hooks';
-import { useChatStore } from '../store/useChatStore';
 
 import useGetUser from '../queries/useGetUser';
 import useGetUserPosts from '../queries/useGetUserPosts';
+import { useChatStore } from '../store/useChatStore';
 
 function ChatRoomHeader({ navigation }: NativeStackHeaderProps) {
   const formatDate = useFormatDate();
