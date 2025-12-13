@@ -1,5 +1,8 @@
-import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React from 'react';
+
+import { colors } from '../../global/constants';
+
 import { ChatListScreen, ChatScreen, ProfileScreen } from '../screens';
 
 export type ChatStackParamList = {
@@ -15,12 +18,12 @@ export function ChatStackNavigator() {
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#fff',
+          backgroundColor: colors.background,
         },
         headerTitleStyle: {
           fontSize: 18,
           fontWeight: '600',
-          color: '#1a1a1a',
+          color: colors.textPrimary,
         },
         headerShadowVisible: true,
       }}>

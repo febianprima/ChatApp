@@ -1,8 +1,10 @@
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { SettingsScreen } from '../screens';
-import { ChatStackNavigator } from './ChatStackNavigator';
+
+import { ChatStackNavigator } from '../chat/navigation/ChatStackNavigator';
+import { colors } from '../global/constants';
+import { SettingsScreen } from '../settings/screens';
 
 export type BottomTabParamList = {
   ChatTab: undefined;
@@ -24,8 +26,8 @@ export function BottomTabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: '#007AFF',
-        tabBarInactiveTintColor: '#8E8E93',
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.textTertiary,
         tabBarStyle: styles.tabBar,
         tabBarLabelStyle: styles.tabBarLabel,
         headerShown: false,
@@ -46,16 +48,27 @@ export function BottomTabNavigator() {
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: '#fff',
-    borderTopColor: '#e5e5e5',
-    borderTopWidth: 1,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
+    backgroundColor: colors.background,
+    borderColor: colors.border,
+    borderWidth: 1,
+    borderRadius: 20,
     paddingTop: 8,
     paddingBottom: 8,
-    height: 60,
+    marginBottom: 24,
+    marginHorizontal: 24,
+    height: 72,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   tabBarLabel: {
     fontSize: 12,
     fontWeight: '500',
+    marginTop: 4,
   },
   icon: {
     fontSize: 24,
@@ -64,8 +77,8 @@ const styles = StyleSheet.create({
     transform: [{ scale: 1.1 }],
   },
   header: {
-    backgroundColor: '#fff',
-    shadowColor: '#000',
+    backgroundColor: colors.surface,
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
@@ -74,6 +87,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#1a1a1a',
+    color: colors.textPrimary,
   },
 });
