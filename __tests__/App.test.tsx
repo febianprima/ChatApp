@@ -1,13 +1,14 @@
 /**
  * @format
  */
-
+import { render } from '@testing-library/react-native';
 import React from 'react';
-import ReactTestRenderer from 'react-test-renderer';
+
 import App from '../App';
 
-test('renders correctly', async () => {
-  await ReactTestRenderer.act(() => {
-    ReactTestRenderer.create(<App />);
+describe('App', () => {
+  it('renders without crashing', () => {
+    // App renders with mocked navigation, so we just verify it doesn't throw
+    expect(() => render(<App />)).not.toThrow();
   });
 });
