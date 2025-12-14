@@ -6,12 +6,7 @@ import { ChatStackNavigator } from '../chat/navigation/ChatStackNavigator';
 import { AnimatedTabBar } from '../global/components';
 import { SettingsScreen } from '../settings/screens';
 
-export type BottomTabParamList = {
-  ChatTab: undefined;
-  SettingsTab: undefined;
-};
-
-const Tab = createBottomTabNavigator<BottomTabParamList>();
+const Tab = createBottomTabNavigator<global.BottomTabParamList>();
 
 // Define stable icon components outside of render
 function ChatTabIcon({ focused }: { focused: boolean }) {

@@ -1,32 +1,32 @@
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { memo } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { Shimmer, Touchable } from '../../global/components';
 import { colors } from '../../global/constants';
 import { useFormatDate } from '../../global/hooks';
 
-import { ChatStackParamList } from '../navigation/ChatStackNavigator';
 import useGetUserPosts from '../queries/useGetUserPosts';
 import { useChatStore } from '../store/useChatStore';
 
 import { ChatListItemContentSkeleton } from './ChatListItemContentSkeleton';
+import { UserProfile } from './UserProfile';
 
 interface ChatListItemProps {
   data: chat.User;
 }
 
 const ChatListItem = memo(({ data }: ChatListItemProps) => {
-  const navigation = useNavigation<NativeStackNavigationProp<ChatStackParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<chat.ChatStackParamList>>();
   const formatDate = useFormatDate();
-  const { id: userId, name, avatar } = data;
+  const { id: userId, name, username, avatar } = data;
 
   const { lastPost, isLoading } = useGetUserPosts({ userId });
-  const { setContactUserId } = useChatStore();
+  const { setSelectedContactUser } = useChatStore();
 
   const handlePress = () => {
-    setContactUserId(userId);
+    setSelectedContactUser(data);
     navigation.navigate('ChatRoom');
   };
 
@@ -34,13 +34,12 @@ const ChatListItem = memo(({ data }: ChatListItemProps) => {
   if (isLoading) {
     return (
       <View style={styles.container}>
-        <View style={styles.profile}>
-          <Image source={{ uri: avatar }} style={styles.avatar} />
-          <View style={styles.info}>
-            <Text style={styles.name}>{name}</Text>
-            <Shimmer width={80} height={14} />
-          </View>
-        </View>
+        <UserProfile
+          avatar={avatar}
+          name={name}
+          username={username}
+          lastSeenDate={<Shimmer width={80} height={14} />}
+        />
         <ChatListItemContentSkeleton />
       </View>
     );
@@ -55,13 +54,12 @@ const ChatListItem = memo(({ data }: ChatListItemProps) => {
 
   return (
     <Touchable onPress={handlePress} style={styles.container}>
-      <View style={styles.profile}>
-        <Image source={{ uri: avatar }} style={styles.avatar} />
-        <View style={styles.info}>
-          <Text style={styles.name}>{name}</Text>
-          <Text style={styles.date}>{formatDate(createdAt)}</Text>
-        </View>
-      </View>
+      <UserProfile
+        avatar={avatar}
+        name={name}
+        username={username}
+        lastSeenDate={formatDate(createdAt)}
+      />
       <View style={styles.content}>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.body} numberOfLines={2}>
@@ -79,27 +77,6 @@ const styles = StyleSheet.create({
     gap: 16,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
-  },
-  profile: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-  },
-  info: {
-    marginLeft: 16,
-  },
-  name: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: colors.textPrimary,
-  },
-  date: {
-    fontSize: 12,
-    color: colors.textSecondary,
   },
   content: {
     gap: 8,

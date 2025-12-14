@@ -6,13 +6,7 @@ import { colors } from '../../global/constants';
 import ChatRoomHeader from '../components/ChatRoomHeader';
 import { ChatListScreen, ChatRoomScreen, ProfileScreen } from '../screens';
 
-export type ChatStackParamList = {
-  ChatList: undefined;
-  ChatRoom: undefined;
-  Profile: undefined;
-};
-
-const Stack = createNativeStackNavigator<ChatStackParamList>();
+const Stack = createNativeStackNavigator<chat.ChatStackParamList>();
 
 export function ChatStackNavigator() {
   return (
@@ -27,6 +21,7 @@ export function ChatStackNavigator() {
           color: colors.textPrimary,
         },
         headerShadowVisible: true,
+        headerTitleAlign: 'center',
       }}>
       <Stack.Screen name="ChatList" component={ChatListScreen} options={{ title: 'Chats' }} />
       <Stack.Screen
@@ -34,7 +29,11 @@ export function ChatStackNavigator() {
         component={ChatRoomScreen}
         options={{ title: 'Chat', header: ChatRoomHeader }}
       />
-      <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
+      <Stack.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{ title: 'Profile', headerShown: false }}
+      />
     </Stack.Navigator>
   );
 }

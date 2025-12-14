@@ -1,24 +1,18 @@
 import { HeaderBackButton } from '@react-navigation/elements';
 import { NativeStackHeaderProps } from '@react-navigation/native-stack';
 import React from 'react';
-import { Image, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors } from '../../global/constants';
-import { useFormatDate } from '../../global/hooks';
 
 import useGetUser from '../queries/useGetUser';
-import useGetUserPosts from '../queries/useGetUserPosts';
-import { useChatStore } from '../store/useChatStore';
 
 import ChatRoomHeaderSkeleton from './ChatRoomHeaderSkeleton';
+import { UserProfile } from './UserProfile';
 
 function ChatRoomHeader({ navigation }: NativeStackHeaderProps) {
-  const formatDate = useFormatDate();
-  const { contactUserId } = useChatStore();
-
-  const { data: userData, isLoading: isUserDataLoading } = useGetUser({ userId: contactUserId });
-  const { lastPost, isLoading: isPostDataLoading } = useGetUserPosts({ userId: contactUserId });
+  const { data: userData, isLoading: isUserDataLoading } = useGetUser();
 
   const { top } = useSafeAreaInsets();
   const { canGoBack, goBack, navigate } = navigation;
@@ -31,27 +25,22 @@ function ChatRoomHeader({ navigation }: NativeStackHeaderProps) {
     navigate('Profile');
   };
 
-  if (isUserDataLoading || isPostDataLoading) {
+  if (isUserDataLoading) {
     return <ChatRoomHeaderSkeleton navigation={navigation} />;
   }
 
-  if (!lastPost || !userData) {
+  if (!userData) {
     goBack();
     return;
   }
 
-  const { name, avatar } = userData;
-  const { createdAt } = lastPost;
+  const { name, username, avatar } = userData;
 
   return (
     <View style={[styles.container, { paddingTop: top + 16 }]}>
       {canGoBack() && <HeaderBackButton onPress={handleBack} tintColor={colors.textPrimary} />}
-      <Pressable onPress={handleProfilePress} style={styles.profile}>
-        <Image source={{ uri: avatar }} style={styles.avatar} />
-        <View>
-          <Text style={styles.name}>{name}</Text>
-          <Text style={styles.date}>{formatDate(createdAt)}</Text>
-        </View>
+      <Pressable onPress={handleProfilePress}>
+        <UserProfile avatar={avatar} name={name} username={username} size="small" />
       </Pressable>
     </View>
   );
@@ -68,25 +57,6 @@ const styles = StyleSheet.create({
         paddingLeft: 16,
       },
     }),
-  },
-  profile: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  avatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-  },
-  name: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.textPrimary,
-  },
-  date: {
-    fontSize: 12,
-    color: colors.textSecondary,
   },
 });
 

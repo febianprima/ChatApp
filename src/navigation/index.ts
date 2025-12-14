@@ -1,1 +1,1 @@
-export { BottomTabNavigator, type BottomTabParamList } from './BottomTabNavigator';
+export { BottomTabNavigator } from './BottomTabNavigator';

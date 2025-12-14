@@ -3,11 +3,14 @@ declare namespace chat {
   interface Store extends chat.State, chat.Actions {}
 
   interface State {
-    contactUserId: User['id'];
+    selectedContactUser: User | null;
+    blockedUsers: User['id'][];
   }
 
   interface Actions {
-    setContactUserId: (contactUserId: User['id']) => void;
+    setSelectedContactUser: (selectedContactUser: User | null) => void;
+    blockUser: (userId: User['id']) => void;
+    unblockUser: (userId: User['id']) => void;
   }
   //#endregion
 
@@ -49,6 +52,22 @@ declare namespace chat {
     limit: number;
     offset: number;
     results: Post[];
+  }
+  //#endregion
+
+  //#region navigation type
+  type ChatStackParamList = {
+    ChatList: undefined;
+    ChatRoom: undefined;
+    Profile: undefined;
+  };
+  //#endregion
+
+  //#region hooks type
+  interface ContactItem {
+    icon: string;
+    value: string;
+    onPress: () => void;
   }
   //#endregion
 }

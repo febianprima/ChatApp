@@ -18,6 +18,7 @@ interface TouchableProps {
   style?: ViewStyle;
   rippleColor?: string;
   underlayColor?: string;
+  type?: 'default' | 'circle' | 'rounded';
 }
 
 export function Touchable({
@@ -28,6 +29,7 @@ export function Touchable({
   style,
   rippleColor = colors.touchable,
   underlayColor = colors.touchable,
+  type = 'default',
 }: TouchableProps) {
   if (Platform.OS === 'android') {
     return (
@@ -37,7 +39,15 @@ export function Touchable({
         disabled={disabled}
         useForeground={true}
         background={TouchableNativeFeedback.Ripple(rippleColor, false)}>
-        <View style={[styles.container, style]}>{children}</View>
+        <View
+          style={[
+            styles.container,
+            type === 'circle' && styles.circle,
+            type === 'rounded' && styles.rounded,
+            style,
+          ]}>
+          {children}
+        </View>
       </TouchableNativeFeedback>
     );
   }
@@ -48,7 +58,11 @@ export function Touchable({
       onLongPress={onLongPress}
       disabled={disabled}
       underlayColor={underlayColor}
-      style={styles.container}>
+      style={[
+        styles.container,
+        type === 'circle' && styles.circle,
+        type === 'rounded' && styles.rounded,
+      ]}>
       <View style={style}>{children}</View>
     </TouchableHighlight>
   );
@@ -57,5 +71,11 @@ export function Touchable({
 const styles = StyleSheet.create({
   container: {
     overflow: 'hidden',
+  },
+  circle: {
+    borderRadius: 24,
+  },
+  rounded: {
+    borderRadius: 12,
   },
 });
