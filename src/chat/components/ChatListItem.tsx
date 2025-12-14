@@ -22,8 +22,23 @@ const ChatListItem = memo(({ data }: ChatListItemProps) => {
   const formatDate = useFormatDate();
   const { id: userId, name, username, avatar } = data;
 
-  const { lastPost, isLoading } = useGetUserPosts({ userId });
-  const { setSelectedContactUser, blockedUsers } = useChatStore();
+  const { lastPost: apiLastPost, isLoading } = useGetUserPosts({ userId });
+  const { setSelectedContactUser, blockedUsers, sentMessagesByUser } = useChatStore();
+
+  // Get the most recent message (from API or persisted)
+  const lastPost = useMemo(() => {
+    const persistedMessages = sentMessagesByUser[userId] ?? [];
+    const persistedLastPost = persistedMessages[0]; // Already sorted newest first
+
+    if (!apiLastPost && !persistedLastPost) return null;
+    if (!apiLastPost) return persistedLastPost;
+    if (!persistedLastPost) return apiLastPost;
+
+    // Compare timestamps and return the newest
+    return new Date(persistedLastPost.createdAt) > new Date(apiLastPost.createdAt)
+      ? persistedLastPost
+      : apiLastPost;
+  }, [apiLastPost, sentMessagesByUser, userId]);
 
   const handlePress = () => {
     setSelectedContactUser(data);

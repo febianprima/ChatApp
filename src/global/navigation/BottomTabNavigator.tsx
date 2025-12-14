@@ -2,9 +2,10 @@ import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/b
 import React, { useCallback } from 'react';
 import { StyleSheet, Text } from 'react-native';
 
-import { ChatStackNavigator } from '../chat/navigation/ChatStackNavigator';
-import { AnimatedTabBar } from '../global/components';
-import { SettingsStackNavigator } from '../settings/navigation/SettingsStackNavigator';
+import { ChatStackNavigator } from '../../chat/navigation/ChatStackNavigator';
+import { SettingsStackNavigator } from '../../settings/navigation/SettingsStackNavigator';
+
+import { AnimatedTabBar } from '../components';
 
 const Tab = createBottomTabNavigator<global.BottomTabParamList>();
 

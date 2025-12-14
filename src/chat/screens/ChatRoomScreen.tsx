@@ -1,9 +1,17 @@
 import React, { useCallback, useRef } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
 
 import { colors } from '../../global/constants';
 
 import { ChatBubble } from '../components/ChatBubble';
+import { ChatInput } from '../components/ChatInput';
 import { DateSeparator } from '../components/DateSeparator';
 import { ChatListItem, useChatRoomMessages } from '../hooks/useChatRoomMessages';
 
@@ -34,7 +42,9 @@ export function ChatRoomScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <FlatList
         ref={flatListRef}
         data={items}
@@ -43,8 +53,10 @@ export function ChatRoomScreen() {
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
         inverted
+        keyboardDismissMode="interactive"
       />
-    </View>
+      <ChatInput />
+    </KeyboardAvoidingView>
   );
 }
 

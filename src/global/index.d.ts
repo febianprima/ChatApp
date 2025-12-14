@@ -4,12 +4,12 @@ declare namespace global {
 
   interface State {
     isAuthenticated: boolean;
-    userId: number | null;
+    userId: number;
   }
 
   interface Actions {
     setAuthenticated: (isAuthenticated: boolean) => void;
-    setUserId: (userId: number | null) => void;
+    setUserId: (userId: number) => void;
     reset: () => void;
   }
   //#endregion

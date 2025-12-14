@@ -5,12 +5,14 @@ declare namespace chat {
   interface State {
     selectedContactUser: User | null;
     blockedUsers: User['id'][];
+    sentMessagesByUser: Record<User['id'], Post[]>;
   }
 
   interface Actions {
     setSelectedContactUser: (selectedContactUser: User | null) => void;
     blockUser: (userId: User['id']) => void;
     unblockUser: (userId: User['id']) => void;
+    addSentMessage: (userId: User['id'], message: Post) => void;
   }
   //#endregion
 
@@ -52,6 +54,12 @@ declare namespace chat {
     limit: number;
     offset: number;
     results: Post[];
+  }
+
+  interface PostMessage {
+    userId: number;
+    title: string;
+    body: string;
   }
   //#endregion
 

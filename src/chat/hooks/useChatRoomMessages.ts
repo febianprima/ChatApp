@@ -52,7 +52,7 @@ function getDateKey(date: Date): string {
 
 export function useChatRoomMessages() {
   const { userId: authenticatedUserId } = useGlobalStore();
-  const { selectedContactUser } = useChatStore();
+  const { selectedContactUser, sentMessagesByUser } = useChatStore();
 
   const contactUserId = selectedContactUser?.id ?? 0;
 
@@ -71,9 +71,29 @@ export function useChatRoomMessages() {
     const contactPosts = contactPostsData?.results ?? [];
     const ownPosts = ownPostsData?.results ?? [];
 
+    // Get persisted sent messages for current authenticated user
+    const persistedOwnMessages = authenticatedUserId
+      ? (sentMessagesByUser[authenticatedUserId] ?? [])
+      : [];
+
+    // Get persisted sent messages for contact user
+    const persistedContactMessages = contactUserId ? (sentMessagesByUser[contactUserId] ?? []) : [];
+
+    // Merge API posts with persisted sent messages (dedupe by id)
+    const ownPostIds = new Set(ownPosts.map(p => p.id));
+    const uniquePersistedOwnMessages = persistedOwnMessages.filter(m => !ownPostIds.has(m.id));
+    const allOwnPosts = [...uniquePersistedOwnMessages, ...ownPosts];
+
+    // Merge contact posts with persisted contact messages (dedupe by id)
+    const contactPostIds = new Set(contactPosts.map(p => p.id));
+    const uniquePersistedContactMessages = persistedContactMessages.filter(
+      m => !contactPostIds.has(m.id),
+    );
+    const allContactPosts = [...uniquePersistedContactMessages, ...contactPosts];
+
     const allMessages: ChatMessage[] = [
-      ...contactPosts.map(post => ({ ...post, isOwn: false })),
-      ...ownPosts.map(post => ({ ...post, isOwn: true })),
+      ...allContactPosts.map(post => ({ ...post, isOwn: false })),
+      ...allOwnPosts.map(post => ({ ...post, isOwn: true })),
     ];
 
     // Sort by createdAt descending (newest first for inverted FlatList)
@@ -105,7 +125,7 @@ export function useChatRoomMessages() {
     }
 
     return result;
-  }, [contactPostsData, ownPostsData]);
+  }, [contactPostsData, ownPostsData, sentMessagesByUser, authenticatedUserId, contactUserId]);
 
   const isLoading = isContactPostsLoading || isOwnPostsLoading;
 

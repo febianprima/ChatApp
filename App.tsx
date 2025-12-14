@@ -5,7 +5,7 @@ import { StatusBar, useColorScheme } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { queryClient } from './src/global/config/queryClient';
-import { BottomTabNavigator } from './src/navigation';
+import { BottomTabNavigator } from './src/global/navigation/BottomTabNavigator';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
