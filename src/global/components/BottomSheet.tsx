@@ -2,9 +2,11 @@ import React, { useEffect, useRef } from 'react';
 import {
   Animated,
   Dimensions,
+  Image,
   Modal,
   PanResponder,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -19,12 +21,20 @@ interface BottomSheetProps {
   onClose: () => void;
   options: global.BottomSheetOption[];
   title?: string;
+  maxHeightRatio?: number; // 0-1, percentage of screen height
 }
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const CLOSE_THRESHOLD = 100; // Pixels to drag before closing
 
-export function BottomSheet({ visible, onClose, options, title }: BottomSheetProps) {
+export function BottomSheet({
+  visible,
+  onClose,
+  options,
+  title,
+  maxHeightRatio = 0.8,
+}: BottomSheetProps) {
+  const maxHeight = SCREEN_HEIGHT * maxHeightRatio;
   const translateY = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
   const overlayOpacity = useRef(new Animated.Value(0)).current;
 
@@ -103,27 +113,38 @@ export function BottomSheet({ visible, onClose, options, title }: BottomSheetPro
       <Animated.View style={[styles.overlay, { opacity: overlayOpacity }]}>
         <Pressable style={styles.overlayPressable} onPress={animateClose} />
         <Animated.View
-          style={[styles.container, { transform: [{ translateY }] }]}
+          style={[styles.container, { transform: [{ translateY }], maxHeight }]}
           {...panResponder.panHandlers}>
           {/* Drag handle */}
           <View style={styles.handleContainer}>
             <View style={styles.handle} />
           </View>
           {title && <Text style={styles.title}>{title}</Text>}
-          {options.map((option, index) => (
-            <Touchable
-              key={index}
-              style={styles.option}
-              onPress={() => {
-                option.onPress();
-                animateClose();
-              }}>
-              {option.icon && <Text style={styles.optionIcon}>{option.icon}</Text>}
-              <Text style={[styles.optionText, option.destructive && styles.optionTextDestructive]}>
-                {option.label}
-              </Text>
-            </Touchable>
-          ))}
+          <ScrollView style={styles.optionsContainer} showsVerticalScrollIndicator={false}>
+            {options.map((option, index) => (
+              <Touchable
+                key={index}
+                style={styles.option}
+                onPress={() => {
+                  option.onPress();
+                  animateClose();
+                }}>
+                {option.avatar && (
+                  <Image source={{ uri: option.avatar }} style={styles.optionAvatar} />
+                )}
+                {option.icon && !option.avatar && (
+                  <Text style={styles.optionIcon}>{option.icon}</Text>
+                )}
+                <View style={styles.optionContent}>
+                  <Text
+                    style={[styles.optionText, option.destructive && styles.optionTextDestructive]}>
+                    {option.label}
+                  </Text>
+                  {option.subtitle && <Text style={styles.optionSubtitle}>{option.subtitle}</Text>}
+                </View>
+              </Touchable>
+            ))}
+          </ScrollView>
           <Touchable style={styles.cancelButton} onPress={animateClose}>
             <Text style={styles.cancelText}>Cancel</Text>
           </Touchable>
@@ -166,23 +187,38 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 8,
   },
+  optionsContainer: {
+    flexGrow: 0,
+  },
+  option: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+  },
+  optionAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 12,
+    backgroundColor: colors.border,
+  },
   optionIcon: {
     fontSize: 18,
     color: colors.primary,
     marginRight: 12,
   },
-  option: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-  },
-  optionPressed: {
-    backgroundColor: colors.border,
+  optionContent: {
+    flex: 1,
+    gap: 2,
   },
   optionText: {
-    fontSize: 18,
+    fontSize: 16,
     color: colors.textPrimary,
+  },
+  optionSubtitle: {
+    fontSize: 12,
+    color: colors.textTertiary,
   },
   optionTextDestructive: {
     color: colors.error,

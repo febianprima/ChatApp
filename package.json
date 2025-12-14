@@ -1,6 +1,6 @@
 {
   "name": "ChatApp",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -16,7 +16,11 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json}\" \"App.tsx\"",
     "typecheck": "tsc --noEmit",
     "validate": "yarn format:check && yarn lint && yarn typecheck",
-    "prepare": "husky"
+    "prepare": "husky",
+    "version:patch": "npm version patch --no-git-tag-version && yarn version:sync",
+    "version:minor": "npm version minor --no-git-tag-version && yarn version:sync",
+    "version:major": "npm version major --no-git-tag-version && yarn version:sync",
+    "version:sync": "node scripts/sync-version.js"
   },
   "dependencies": {
     "@react-native/new-app-screen": "0.83.0",
@@ -27,6 +31,7 @@
     "react": "19.2.0",
     "react-native": "0.83.0",
     "react-native-config": "^1.6.1",
+    "react-native-device-info": "^15.0.1",
     "react-native-safe-area-context": "^5.6.2",
     "react-native-screens": "^4.18.0",
     "zustand": "^5.0.9"

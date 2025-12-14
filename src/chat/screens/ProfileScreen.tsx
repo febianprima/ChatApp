@@ -1,9 +1,9 @@
 import { HeaderBackButton } from '@react-navigation/elements';
 import React from 'react';
-import { ActivityIndicator, Image, Platform, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Platform, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { BottomSheet, Touchable } from '../../global/components';
+import { BottomSheet, Touchable, UserDetailsCard } from '../../global/components';
 import { colors } from '../../global/constants';
 
 import { useProfileScreen } from '../hooks';
@@ -44,21 +44,12 @@ export function ProfileScreen() {
         </Touchable>
       </View>
       <View style={styles.content}>
-        <View style={styles.profile}>
-          <Image source={{ uri: avatar }} style={styles.avatar} />
-          <Text style={styles.name}>{name}</Text>
-          <Text style={styles.username}>{`@${username}`}</Text>
-        </View>
-        <View style={styles.details}>
-          {contactItems.map(item => (
-            <Touchable onPress={item.onPress} key={item.icon}>
-              <View style={styles.detailItem}>
-                <Text style={styles.detailItemLabel}>{item.icon}</Text>
-                <Text style={styles.detailItemValue}>{item.value}</Text>
-              </View>
-            </Touchable>
-          ))}
-        </View>
+        <UserDetailsCard
+          avatar={avatar}
+          name={name}
+          username={username}
+          contactItems={contactItems}
+        />
       </View>
       <BottomSheet visible={isMenuVisible} onClose={closeMenu} options={menuOptions} />
     </SafeAreaView>
@@ -99,49 +90,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 16,
-    gap: 16,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  profile: {
-    gap: 4,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: colors.textPrimary,
-    marginBottom: 8,
-  },
-  name: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: colors.textPrimary,
-  },
-  username: {
-    fontSize: 16,
-    color: colors.secondaryDark,
-  },
-  details: {
-    gap: 16,
-  },
-  detailItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  detailItemLabel: {
-    fontSize: 16,
-    color: colors.textSecondary,
-  },
-  detailItemValue: {
-    fontSize: 16,
-    color: colors.textSecondary,
   },
 });

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { BASE_URL } from '../../global/constants';
+import { useGlobalStore } from '../../global/store';
 
 import { useChatStore } from '../store/useChatStore';
 
@@ -21,15 +22,19 @@ const fetchUser = async ({ userId }: { userId: number | null }) => {
   }
 };
 
-const useGetUser = () => {
+const useGetUser = ({ isAuthenticatedUser = false }: { isAuthenticatedUser?: boolean } = {}) => {
+  const { userId: authenticatedUserId } = useGlobalStore();
   const { selectedContactUser } = useChatStore();
 
-  const userId = selectedContactUser?.id ?? null;
+  const userId = isAuthenticatedUser ? authenticatedUserId : (selectedContactUser?.id ?? null);
+
+  // Only use initialData for contact users, not authenticated user
+  const initialData = isAuthenticatedUser ? undefined : (selectedContactUser ?? undefined);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['user', userId],
     queryFn: () => fetchUser({ userId }),
-    initialData: selectedContactUser,
+    initialData,
   });
 
   return { data, isLoading, error };

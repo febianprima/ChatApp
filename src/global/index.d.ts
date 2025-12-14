@@ -4,12 +4,12 @@ declare namespace global {
 
   interface State {
     isAuthenticated: boolean;
-    userId: string | null;
+    userId: number | null;
   }
 
   interface Actions {
     setAuthenticated: (isAuthenticated: boolean) => void;
-    setUserId: (userId: string | null) => void;
+    setUserId: (userId: number | null) => void;
     reset: () => void;
   }
   //#endregion
@@ -17,7 +17,9 @@ declare namespace global {
   //#region components type
   interface BottomSheetOption {
     icon?: string;
+    avatar?: string;
     label: string;
+    subtitle?: string;
     onPress: () => void;
     destructive?: boolean;
   }
@@ -27,6 +29,10 @@ declare namespace global {
   type BottomTabParamList = {
     ChatTab: undefined;
     SettingsTab: undefined;
+  };
+
+  type SettingsStackParamList = {
+    Settings: undefined;
   };
   //#endregion
 }

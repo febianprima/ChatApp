@@ -1,6 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { BASE_URL } from '../../global/constants/api';
+import { useGlobalStore } from '../../global/store/globalStore';
 
 const LIMIT = 10;
 
@@ -21,7 +22,9 @@ const fetchUsers = async ({ pageParam = 0 }: { pageParam?: number }) => {
   }
 };
 
-const useGetUsers = () => {
+const useGetUsers = ({ includeCurrentUser = false }: { includeCurrentUser?: boolean } = {}) => {
+  const { userId: currentUserId } = useGlobalStore();
+
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ['users'],
@@ -37,7 +40,10 @@ const useGetUsers = () => {
     });
 
   // Flatten all pages into a single array of users
-  const users = data?.pages.flatMap(page => page.results) ?? [];
+  const allUsers = data?.pages.flatMap(page => page.results) ?? [];
+
+  // Optionally filter out current user
+  const users = includeCurrentUser ? allUsers : allUsers.filter(user => user.id !== currentUserId);
 
   return {
     data: { results: users, total: data?.pages[0]?.total ?? 0 },

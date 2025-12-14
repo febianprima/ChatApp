@@ -4,7 +4,7 @@ import { StyleSheet, Text } from 'react-native';
 
 import { ChatStackNavigator } from '../chat/navigation/ChatStackNavigator';
 import { AnimatedTabBar } from '../global/components';
-import { SettingsScreen } from '../settings/screens';
+import { SettingsStackNavigator } from '../settings/navigation/SettingsStackNavigator';
 
 const Tab = createBottomTabNavigator<global.BottomTabParamList>();
 
@@ -36,7 +36,7 @@ export function BottomTabNavigator() {
       />
       <Tab.Screen
         name="SettingsTab"
-        component={SettingsScreen}
+        component={SettingsStackNavigator}
         options={{ tabBarLabel: 'Settings', tabBarIcon: SettingsTabIcon }}
       />
     </Tab.Navigator>
