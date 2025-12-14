@@ -34,13 +34,13 @@ function ChatRoomHeader({ navigation }: NativeStackHeaderProps) {
     return;
   }
 
-  const { name, username, avatar } = userData;
+  const { id, name, username, avatar } = userData;
 
   return (
     <View style={[styles.container, { paddingTop: top + 16 }]}>
       {canGoBack() && <HeaderBackButton onPress={handleBack} tintColor={colors.textPrimary} />}
       <Pressable onPress={handleProfilePress}>
-        <UserProfile avatar={avatar} name={name} username={username} size="small" />
+        <UserProfile id={id} avatar={avatar} name={name} username={username} size="small" />
       </Pressable>
     </View>
   );

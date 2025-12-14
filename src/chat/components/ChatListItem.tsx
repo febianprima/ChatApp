@@ -23,11 +23,11 @@ const ChatListItem = memo(({ data }: ChatListItemProps) => {
   const { id: userId, name, username, avatar } = data;
 
   const { lastPost, isLoading } = useGetUserPosts({ userId });
-  const { setSelectedContactUser } = useChatStore();
+  const { setSelectedContactUser, blockedUsers } = useChatStore();
 
   const handlePress = () => {
     setSelectedContactUser(data);
-    navigation.navigate('ChatRoom');
+    navigation.navigate(blockedUsers.includes(userId) ? 'Profile' : 'ChatRoom');
   };
 
   const renderLastMessage = useMemo(() => {
@@ -51,6 +51,7 @@ const ChatListItem = memo(({ data }: ChatListItemProps) => {
           avatar={avatar}
           name={name}
           username={username}
+          id={userId}
           lastSeenDate={<Shimmer width={80} height={14} />}
         />
         <ChatListItemContentSkeleton />
@@ -64,6 +65,7 @@ const ChatListItem = memo(({ data }: ChatListItemProps) => {
         avatar={avatar}
         name={name}
         username={username}
+        id={userId}
         lastSeenDate={formatDate(lastPost?.createdAt)}
       />
       {renderLastMessage}

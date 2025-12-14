@@ -8,8 +8,8 @@ import { useChatStore } from '../store/useChatStore';
 
 export function useProfileScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<chat.ChatStackParamList>>();
-  const { canGoBack, goBack, popToTop } = navigation;
-  const { blockUser } = useChatStore();
+  const { canGoBack, goBack, popToTop, replace } = navigation;
+  const { blockedUsers, blockUser, unblockUser } = useChatStore();
 
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const { data: userData, isLoading } = useGetUser();
@@ -63,11 +63,21 @@ export function useProfileScreen() {
     ]);
   }, [userData?.name, handleBlockUserConfirm]);
 
+  const handleUnblockUser = useCallback(() => {
+    if (userData?.id) {
+      unblockUser(userData.id);
+      Alert.alert('Unblocked', 'User has been unblocked');
+      replace('ChatRoom');
+    }
+  }, [userData?.id, unblockUser, replace]);
+
   // Menu options
-  const menuOptions: global.BottomSheetOption[] = useMemo(
-    () => [{ icon: '🚫', label: 'Block User', onPress: handleBlockUser, destructive: true }],
-    [handleBlockUser],
-  );
+  const menuOptions: global.BottomSheetOption[] = useMemo(() => {
+    if (userData?.id && blockedUsers.includes(userData.id)) {
+      return [{ icon: '😶‍🌫️', label: 'Unblock User', onPress: handleUnblockUser }];
+    }
+    return [{ icon: '🚫', label: 'Block User', onPress: handleBlockUser, destructive: true }];
+  }, [userData?.id, blockedUsers, handleBlockUser, handleUnblockUser]);
 
   return {
     // Navigation

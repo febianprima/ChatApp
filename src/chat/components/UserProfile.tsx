@@ -3,11 +3,14 @@ import { Image, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
 import { colors } from '../../global/constants';
 
+import { useChatStore } from '../store/useChatStore';
+
 import { NewChatButton } from './NewChatButton';
 
 type AvatarSize = 'small' | 'medium' | 'large';
 
 interface UserProfileProps {
+  id: number;
   avatar?: string;
   name: string;
   username?: string;
@@ -23,6 +26,7 @@ const AVATAR_SIZES: Record<AvatarSize, number> = {
 };
 
 export function UserProfile({
+  id,
   avatar,
   name,
   username,
@@ -30,9 +34,15 @@ export function UserProfile({
   size = 'medium',
   style,
 }: UserProfileProps) {
+  const { blockedUsers } = useChatStore();
+
   const avatarSize = AVATAR_SIZES[size];
 
   const renderRightComponent = useMemo(() => {
+    if (blockedUsers.includes(id)) {
+      return <Text style={styles.blocked}>{'Blocked'}</Text>;
+    }
+
     if (lastSeenDate) {
       return <Text style={styles.lastSeenDate}>{lastSeenDate}</Text>;
     }
@@ -42,7 +52,7 @@ export function UserProfile({
     }
 
     return null;
-  }, [lastSeenDate]);
+  }, [lastSeenDate, blockedUsers, id]);
 
   return (
     <View style={[styles.container, style]}>
@@ -93,6 +103,11 @@ const styles = StyleSheet.create({
   lastSeenDate: {
     fontSize: 12,
     color: colors.textTertiary,
+    paddingVertical: 4,
+  },
+  blocked: {
+    fontSize: 12,
+    color: colors.error,
     paddingVertical: 4,
   },
 });
