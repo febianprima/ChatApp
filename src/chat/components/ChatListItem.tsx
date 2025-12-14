@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Shimmer, Touchable } from '../../global/components';
@@ -30,6 +30,19 @@ const ChatListItem = memo(({ data }: ChatListItemProps) => {
     navigation.navigate('ChatRoom');
   };
 
+  const renderLastMessage = useMemo(() => {
+    if (!lastPost) return null;
+
+    return (
+      <View style={styles.content}>
+        <Text style={styles.title}>{lastPost?.title}</Text>
+        <Text style={styles.body} numberOfLines={2}>
+          {lastPost?.body}
+        </Text>
+      </View>
+    );
+  }, [lastPost]);
+
   // Show skeleton while loading
   if (isLoading) {
     return (
@@ -45,27 +58,15 @@ const ChatListItem = memo(({ data }: ChatListItemProps) => {
     );
   }
 
-  // Hide if no posts after loading
-  if (!lastPost) {
-    return null;
-  }
-
-  const { title, body, createdAt } = lastPost;
-
   return (
     <Touchable onPress={handlePress} style={styles.container}>
       <UserProfile
         avatar={avatar}
         name={name}
         username={username}
-        lastSeenDate={formatDate(createdAt)}
+        lastSeenDate={formatDate(lastPost?.createdAt)}
       />
-      <View style={styles.content}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.body} numberOfLines={2}>
-          {body}
-        </Text>
-      </View>
+      {renderLastMessage}
     </Touchable>
   );
 });

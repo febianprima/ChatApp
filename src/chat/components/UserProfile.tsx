@@ -1,7 +1,9 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useMemo } from 'react';
 import { Image, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
 import { colors } from '../../global/constants';
+
+import { NewChatButton } from './NewChatButton';
 
 type AvatarSize = 'small' | 'medium' | 'large';
 
@@ -30,6 +32,18 @@ export function UserProfile({
 }: UserProfileProps) {
   const avatarSize = AVATAR_SIZES[size];
 
+  const renderRightComponent = useMemo(() => {
+    if (lastSeenDate) {
+      return <Text style={styles.lastSeenDate}>{lastSeenDate}</Text>;
+    }
+
+    if (typeof lastSeenDate === 'string') {
+      return <NewChatButton />;
+    }
+
+    return null;
+  }, [lastSeenDate]);
+
   return (
     <View style={[styles.container, style]}>
       <View style={styles.profile}>
@@ -45,7 +59,7 @@ export function UserProfile({
           <Text style={styles.username}>{`@${username}`}</Text>
         </View>
       </View>
-      {lastSeenDate && <Text style={styles.lastSeenDate}>{lastSeenDate}</Text>}
+      {renderRightComponent}
     </View>
   );
 }

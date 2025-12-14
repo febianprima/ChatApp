@@ -14,7 +14,9 @@ export function useFormatDate() {
   const timezone = useTimezone();
 
   const format = useCallback(
-    (date: DateInput): string => {
+    (date: DateInput | undefined): string => {
+      if (!date) return '';
+
       return formatDate(date, timezone);
     },
     [timezone],
