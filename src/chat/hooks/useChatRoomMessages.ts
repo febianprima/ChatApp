@@ -1,12 +1,15 @@
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 
 import { useGlobalStore } from '../../global/store';
 
 import useGetUserPosts from '../queries/useGetUserPosts';
 import { useChatStore } from '../store/useChatStore';
 
+const NEW_MESSAGE_THRESHOLD_MS = 2000; // Messages less than 2 seconds old are "new"
+
 export interface ChatMessage extends chat.Post {
   isOwn: boolean;
+  isNew?: boolean;
 }
 
 export interface DateSeparatorItem {
@@ -56,6 +59,9 @@ export function useChatRoomMessages() {
 
   const contactUserId = selectedContactUser?.id ?? 0;
 
+  // Track which message IDs have already been rendered (to avoid re-animating)
+  const seenMessageIds = useRef<Set<number>>(new Set());
+
   // Fetch posts from contact user
   const { data: contactPostsData, isLoading: isContactPostsLoading } = useGetUserPosts({
     userId: contactUserId,
@@ -91,10 +97,26 @@ export function useChatRoomMessages() {
     );
     const allContactPosts = [...uniquePersistedContactMessages, ...contactPosts];
 
+    const now = Date.now();
     const allMessages: ChatMessage[] = [
-      ...allContactPosts.map(post => ({ ...post, isOwn: false })),
-      ...allOwnPosts.map(post => ({ ...post, isOwn: true })),
+      ...allContactPosts.map(post => ({
+        ...post,
+        isOwn: false,
+        isNew:
+          !seenMessageIds.current.has(post.id) &&
+          now - new Date(post.createdAt).getTime() < NEW_MESSAGE_THRESHOLD_MS,
+      })),
+      ...allOwnPosts.map(post => ({
+        ...post,
+        isOwn: true,
+        isNew:
+          !seenMessageIds.current.has(post.id) &&
+          now - new Date(post.createdAt).getTime() < NEW_MESSAGE_THRESHOLD_MS,
+      })),
     ];
+
+    // Update seen message IDs
+    allMessages.forEach(msg => seenMessageIds.current.add(msg.id));
 
     // Sort by createdAt descending (newest first for inverted FlatList)
     allMessages.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());

@@ -23,7 +23,7 @@ export function ChatRoomScreen() {
     if (item.type === 'separator') {
       return <DateSeparator label={item.label} />;
     }
-    return <ChatBubble post={item} isOwn={item.isOwn} />;
+    return <ChatBubble post={item} isOwn={item.isOwn} isNew={item.isNew} />;
   }, []);
 
   const keyExtractor = useCallback((item: ChatListItem) => {
