@@ -1,151 +1,207 @@
 # ChatApp
 
-A React Native chat application built with a focus on clean architecture, minimal dependencies, and native-first component design.
+A React Native chat application demonstrating micro frontend architecture patterns in a monolith repository, with intentional UX design decisions for mobile ergonomics.
 
 > **Built in 4 days with vibe coding** 🎵 — See [Development Story](#development-story) below.
 
 ## Features
 
-- **Chat List** - View all contacts with their last message preview
-- **Chat Room** - Real-time messaging interface with animated message bubbles
-- **User Profiles** - View and interact with user contact details
-- **Block/Unblock Users** - Manage blocked contacts with persistent storage
-- **User Switching** - Switch between different user accounts for testing
-- **Skeleton Loading** - Smooth loading states throughout the app
-- **Snackbar Notifications** - Non-intrusive feedback for user actions
-- **Animated Tab Bar** - Smooth hide/show animation when navigating
+- **Chat List** - Contact list with last message preview and skeleton loading
+- **Chat Room** - Messaging interface with animated bubbles and date grouping
+- **User Profiles** - Contact details with actionable items
+- **Block/Unblock** - Persistent user blocking with snackbar feedback
+- **User Switching** - Switch accounts for testing multi-user scenarios
+- **Animated Transitions** - Smooth state masking and micro-interactions
 
 ## Architecture
 
-### Project Structure
+### Micro Frontend in Monolith
+
+This project simulates a **micro frontend approach within a monolith repository**. The goal is to structure code in a way that:
+
+- **Reduces friction between engineers** — Clear module boundaries mean teams can work on `chat`, `settings`, or `global` independently without stepping on each other's toes
+- **Enables product-focused development** — Each feature module (`chat/`, `settings/`) is self-contained with its own screens, components, hooks, and state, making it easy to reason about a single product area
+- **Scales naturally** — New features become new modules, not additions to a growing monolithic structure
+
+**Further Reading:**
+
+- [Micro Frontends](https://martinfowler.com/articles/micro-frontends.html) — Martin Fowler's comprehensive guide to micro frontend architecture
+- [Architecture Patterns That Support Team Ownership](https://palospublishing.com/architecture-patterns-that-support-team-ownership/) — How architectural patterns enable team autonomy
+- [Conway's Law](https://en.wikipedia.org/wiki/Conway%27s_law) — Why system structure mirrors team structure
 
 ```
 src/
-├── chat/                    # Chat feature module
+├── chat/                    # Chat feature module (owned by Chat team)
 │   ├── components/          # Chat-specific UI components
-│   ├── hooks/               # Custom hooks for chat logic
+│   ├── hooks/               # Chat business logic
 │   ├── navigation/          # Chat stack navigator
-│   ├── queries/             # React Query hooks for data fetching
+│   ├── queries/             # Data fetching for chat
 │   ├── screens/             # Chat screens
-│   ├── store/               # Zustand store for chat state
-│   ├── utils/               # Chat utilities
-│   └── index.d.ts           # Chat type definitions
-├── global/                  # Shared/global module
-│   ├── components/          # Reusable UI components
-│   ├── config/              # App configuration (QueryClient)
-│   ├── constants/           # Colors, API, navigation constants
-│   ├── hooks/               # Shared custom hooks
-│   ├── navigation/          # Bottom tab navigator
-│   ├── store/               # Global state (auth, snackbar)
-│   ├── utils/               # Shared utilities
-│   └── index.d.ts           # Global type definitions
-├── settings/                # Settings feature module
+│   ├── store/               # Chat state (Zustand)
+│   └── index.d.ts           # Chat types
+│
+├── settings/                # Settings feature module (owned by Settings team)
 │   ├── navigation/          # Settings stack navigator
 │   └── screens/             # Settings screens
-└── mocks/                   # Mock data for testing
+│
+├── global/                  # Shared module (owned by Platform team)
+│   ├── components/          # Design system components
+│   ├── constants/           # Colors, API config
+│   ├── hooks/               # Shared hooks
+│   ├── navigation/          # Root navigation
+│   ├── store/               # Global state
+│   └── index.d.ts           # Global types
+│
+└── mocks/                   # API mocks
 ```
 
-### Design Principles
+Each module can be thought of as a "mini app" that could theoretically be extracted into its own package if the team grows large enough.
 
-#### 1. Feature-Based Module Structure
+### Code Conventions
 
-The codebase is organized by feature (`chat`, `settings`) rather than by type. Each feature module is self-contained with its own components, screens, hooks, and state management. The `global` module contains shared code used across features.
+| Convention                | Rationale                                                                   |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Named exports**         | Better debugging (preserved names in stack traces), reliable refactoring    |
+| **TypeScript namespaces** | Types grouped by module (`chat.Post`, `global.User`), no import boilerplate |
+| **Index re-exports**      | Clean imports: `import { useGetUser } from '../queries'`                    |
+| **Function declarations** | Consistent style, hoisting benefits, better stack traces                    |
 
-#### 2. TypeScript Namespaces for Type Organization
+## Design System
 
-Types are organized using TypeScript namespaces (`chat`, `global`) defined in `index.d.ts` files. This approach:
+### UX Philosophy
 
-- Keeps related types grouped together
-- Avoids import/export boilerplate for types
-- Provides clear ownership of types per module
+Every design decision is intentional, optimized for mobile ergonomics and user attention.
 
-#### 3. Named Exports Over Default Exports
+#### Snackbar Positioning (Top)
 
-All exports use named exports (`export function`, `export const`) rather than default exports. This provides:
+The snackbar appears at the **top of the screen** because:
 
-- Better debugging (preserved function names in stack traces)
-- Easier refactoring (find-and-replace works reliably)
-- Consistent import style across the codebase
+- **Within natural vision area** — Users' eyes are typically focused on the upper portion of the screen while reading content
+- **Doesn't obscure actions** — Interactive elements (buttons, inputs) are typically at the bottom; top placement avoids blocking user actions
+- **Consistent with system patterns** — iOS notification banners and Android heads-up notifications appear at the top
 
-#### 4. Index Files for Clean Imports
+**Further Reading:**
 
-Each folder has an `index.ts` that re-exports its contents, enabling clean imports:
+- [The Role of Visual Hierarchy in UX](https://www.nngroup.com/articles/visual-hierarchy-ux-definition/) — Nielsen Norman Group on attention flow
 
-```typescript
-// Instead of
-import { useGetUser } from '../queries/useGetUser';
-import { useGetUsers } from '../queries/useGetUsers';
+#### Action Placement (Right Side, Top-to-Bottom)
 
-// We can write
-import { useGetUser, useGetUsers } from '../queries';
-```
+Interactive elements are positioned on the **right side** of the screen:
 
-### State Management
+- **Thumb reach zone** — Most users hold phones in their right hand; right-side actions are within natural thumb arc
+- **Top-to-bottom flow** — Primary actions at the top (menu button, back button), secondary actions below
+- **Reduced hand movement** — Users don't need to stretch across the screen for common actions
 
-#### Zustand
+**Further Reading:**
 
-We use [Zustand](https://github.com/pmndrs/zustand) for state management because:
+- [How Do Users Really Hold Mobile Devices?](https://www.uxmatters.com/mt/archives/2013/02/how-do-users-really-hold-mobile-devices.php) — Steven Hoober's research on phone grip patterns
+- [Designing for Thumb Zone](https://www.smashingmagazine.com/2016/09/the-thumb-zone-designing-for-mobile-users/) — Smashing Magazine on mobile ergonomics
 
-- **Minimal boilerplate** - No providers, reducers, or action creators
-- **TypeScript-first** - Excellent type inference
-- **Persist middleware** - Easy AsyncStorage integration for data persistence
-- **Selective subscriptions** - Components only re-render when their selected state changes
+#### Alert Style (Native Glass Effect)
 
-**Stores:**
+We use React Native's built-in `Alert.alert()` instead of custom modals:
 
-- `useGlobalStore` - Authentication state (userId)
-- `useChatStore` - Chat state (selected contact, blocked users, sent messages)
-- `useSnackbarStore` - Snackbar visibility and message
+- **iOS glass blur effect** — Native alerts use iOS's frosted glass aesthetic, blending with the system design language
+- **Platform consistency** — Users expect system dialogs for destructive actions (blocking users)
+- **Accessibility built-in** — Native alerts work with VoiceOver/TalkBack out of the box
 
-#### React Query
+**Further Reading:**
 
-[TanStack React Query](https://tanstack.com/query) handles server state:
+- [iOS Human Interface Guidelines: Alerts](https://developer.apple.com/design/human-interface-guidelines/alerts) — Apple's official guidance on alert usage
+- [Material Design: Dialogs](https://m3.material.io/components/dialogs) — Google's dialog component guidelines
 
-- **Caching** - Automatic request deduplication and caching
-- **Background updates** - Data stays fresh without manual refetching
-- **Optimistic updates** - Immediate UI feedback for mutations
-- **Infinite queries** - Built-in pagination support for user lists
+#### Animation Strategy (State Masking)
 
-### Why Built-in Components Over Libraries
+Animations aren't just decorative — they **mask perceived latency**:
 
-We intentionally built custom components instead of using third-party UI libraries:
+| Animation                | Purpose                                             |
+| ------------------------ | --------------------------------------------------- |
+| **Skeleton shimmer**     | Masks data loading, prevents layout shift           |
+| **Tab bar slide**        | Smooth transition when navigating to nested screens |
+| **Chat bubble slide-in** | Draws attention to new messages, masks render delay |
+| **Bottom sheet spring**  | Natural feel for modal interactions                 |
+| **Snackbar fade**        | Non-jarring notification appearance                 |
 
-| Component          | Why Custom                                                             |
-| ------------------ | ---------------------------------------------------------------------- |
-| **AnimatedTabBar** | Full control over hide/show animation timing and behavior              |
-| **BottomSheet**    | Lightweight implementation with PanResponder for drag-to-close         |
-| **Snackbar**       | Simple toast notifications without heavy dependencies                  |
-| **Shimmer**        | Minimal skeleton loading using Animated API                            |
-| **Touchable**      | Platform-specific touch feedback (Ripple on Android, Highlight on iOS) |
+All animations use `useNativeDriver: true` for 60fps performance on the UI thread.
+
+**Further Reading:**
+
+- [The Psychology of Waiting](https://www.nngroup.com/articles/progress-indicators/) — Nielsen Norman Group on perceived wait times
+- [Skeleton Screens: Improve UX with Placeholder UI](https://uxdesign.cc/what-you-should-know-about-skeleton-screens-a820c45a571a) — How skeleton screens improve perceived performance
+- [Animation and Motion Design](https://m3.material.io/styles/motion/overview) — Material Design motion principles
+
+### Why Custom Components
+
+We built custom UI components instead of using libraries like `react-native-paper` or `native-base`:
+
+| Component          | Why Custom                                                       |
+| ------------------ | ---------------------------------------------------------------- |
+| **Touchable**      | Platform-specific feedback (Ripple on Android, Highlight on iOS) |
+| **BottomSheet**    | Lightweight drag-to-close with PanResponder                      |
+| **Snackbar**       | Simple, positioned at top, no dependencies                       |
+| **Shimmer**        | Minimal skeleton loading with Animated API                       |
+| **AnimatedTabBar** | Precise control over hide/show timing                            |
 
 **Benefits:**
 
-- **Smaller bundle size** - No unused features from large UI libraries
-- **Full customization** - Every aspect can be modified to match design requirements
-- **Learning opportunity** - Better understanding of React Native's Animated API
-- **No breaking changes** - No dependency updates to worry about
+- Smaller bundle size (no unused features)
+- Full customization control
+- No breaking changes from dependency updates
+- Deeper understanding of React Native internals
 
-### Animation Strategy
+**Further Reading:**
 
-All animations use React Native's built-in `Animated` API with `useNativeDriver: true` for 60fps performance:
+- [Build vs Buy: Software Components](https://martinfowler.com/articles/build-buy.html) — When to build custom vs use libraries
+- [The Hidden Costs of UI Component Libraries](https://blog.bitsrc.io/the-hidden-costs-of-using-component-libraries-bfd3b36e3b3c) — Trade-offs of third-party UI dependencies
 
-- **Tab bar** - Slide + fade when navigating to nested screens
-- **Chat bubbles** - Slide-in from left/right with scale effect for new messages
-- **Bottom sheet** - Spring animation with drag gesture support
-- **Snackbar** - Fade + slide from top
+## State Management
+
+### Client State (Zustand)
+
+Lightweight, TypeScript-first state management:
+
+```typescript
+// Simple, no boilerplate
+const { userId } = useGlobalStore();
+const { blockUser } = useChatStore();
+```
+
+**Stores:**
+
+- `useGlobalStore` — Auth state (userId)
+- `useChatStore` — Chat state (selected contact, blocked users, sent messages)
+- `useSnackbarStore` — Notification state
+
+**Further Reading:**
+
+- [Zustand Documentation](https://docs.pmnd.rs/zustand/getting-started/introduction) — Official Zustand guide
+- [Why Zustand](https://blog.logrocket.com/zustand-vs-redux/) — Comparison with Redux and other state managers
+
+### Server State (React Query)
+
+Data fetching with automatic caching and background updates:
+
+- **Deduplication** — Multiple components requesting same data = single request
+- **Stale-while-revalidate** — Show cached data immediately, refresh in background
+- **Optimistic updates** — Immediate UI feedback for mutations
+
+**Further Reading:**
+
+- [Practical React Query](https://tkdodo.eu/blog/practical-react-query) — TkDodo's comprehensive React Query guide
+- [Client State vs Server State](https://tanstack.com/query/latest/docs/framework/react/overview) — Why server state needs different treatment
 
 ## Tech Stack
 
-| Category         | Technology                          |
-| ---------------- | ----------------------------------- |
-| Framework        | React Native 0.83                   |
-| Language         | TypeScript 5.8                      |
-| Navigation       | React Navigation 7                  |
-| State Management | Zustand 5                           |
-| Server State     | TanStack React Query 5              |
-| Storage          | AsyncStorage                        |
-| Testing          | Jest + React Native Testing Library |
-| Code Quality     | ESLint + Prettier + Husky           |
+| Category     | Technology                          |
+| ------------ | ----------------------------------- |
+| Framework    | React Native 0.83                   |
+| Language     | TypeScript 5.8                      |
+| Navigation   | React Navigation 7                  |
+| Client State | Zustand 5                           |
+| Server State | TanStack React Query 5              |
+| Persistence  | AsyncStorage                        |
+| Testing      | Jest + React Native Testing Library |
+| Code Quality | ESLint + Prettier + Husky           |
 
 ## Getting Started
 
@@ -153,177 +209,89 @@ All animations use React Native's built-in `Animated` API with `useNativeDriver:
 
 - Node.js >= 20
 - Yarn
-- Xcode (for iOS)
-- Android Studio (for Android)
-- CocoaPods (for iOS)
+- Xcode (iOS) / Android Studio (Android)
+- CocoaPods (iOS)
 
 ### Installation
 
-1. **Clone the repository**
-
-   ```bash
-   git clone <repository-url>
-   cd ChatApp
-   ```
-
-2. **Install dependencies**
-
-   ```bash
-   yarn install
-   ```
-
-3. **iOS Setup**
-
-   ```bash
-   yarn ios:install
-   ```
-
-4. **Configure environment**
-
-   Create a `.env` file in the project root:
-
-   ```env
-   BASE_URL=https://api.example.com
-   ```
-
-### Running the App
-
-**Start Metro bundler:**
-
 ```bash
-yarn start
+# Clone and install
+git clone <repository-url>
+cd ChatApp
+yarn install
+
+# iOS setup
+yarn ios:install
+
+# Configure environment
+echo "BASE_URL=https://api.example.com" > .env
 ```
 
-**Run on iOS:**
+### Running
 
 ```bash
-yarn ios
+yarn start     # Start Metro
+yarn ios       # Run on iOS
+yarn android   # Run on Android
 ```
 
-**Run on Android:**
+### Scripts
 
-```bash
-yarn android
-```
-
-### Development Scripts
-
-| Script           | Description                              |
-| ---------------- | ---------------------------------------- |
-| `yarn start`     | Start Metro bundler                      |
-| `yarn ios`       | Run on iOS simulator                     |
-| `yarn android`   | Run on Android emulator                  |
-| `yarn test`      | Run Jest tests                           |
-| `yarn lint`      | Run ESLint                               |
-| `yarn lint:fix`  | Fix ESLint issues                        |
-| `yarn format`    | Format code with Prettier                |
-| `yarn typecheck` | Run TypeScript compiler check            |
-| `yarn validate`  | Run all checks (format, lint, typecheck) |
-
-### Version Management
-
-```bash
-yarn version:patch  # 1.0.0 → 1.0.1
-yarn version:minor  # 1.0.0 → 1.1.0
-yarn version:major  # 1.0.0 → 2.0.0
-```
-
-Version is automatically synced to iOS and Android native projects.
+| Script               | Description                          |
+| -------------------- | ------------------------------------ |
+| `yarn test`          | Run all tests                        |
+| `yarn lint`          | Run ESLint                           |
+| `yarn typecheck`     | TypeScript check                     |
+| `yarn validate`      | All checks (format, lint, typecheck) |
+| `yarn version:patch` | Bump patch version (1.0.0 → 1.0.1)   |
 
 ## Testing
 
 ```bash
-# Run all tests
-yarn test
-
-# Run tests for changed files only
-yarn test:affected
-
-# Run tests in watch mode
-yarn test --watch
+yarn test                    # All tests
+yarn test tests/flows        # E2E flow tests only
+yarn test --watch            # Watch mode
 ```
 
-## Project Configuration
+**Test structure:**
 
-### Prettier
-
-Configured with `@trivago/prettier-plugin-sort-imports` for automatic import sorting:
-
-1. Third-party modules
-2. Global shared modules (`**/global/**`)
-3. Relative parent imports (`../`)
-4. Relative sibling imports (`./`)
-
-### Husky + lint-staged
-
-Pre-commit hooks automatically:
-
-- Format staged files with Prettier
-- Fix ESLint issues
-- Prevent commits with linting errors
+- `tests/` — Root level tests and E2E flows
+- `src/**/tests/` — Unit tests co-located with modules
 
 ## Development Story
 
 ### Built in 4 Days with Vibe Coding 🎵
 
-This entire application was built in just **4 days** using a collaborative approach between human creativity and AI assistance — what's often called "vibe coding."
+This app was built in **4 days** using AI-assisted development:
+
+| Day   | Focus                                              |
+| ----- | -------------------------------------------------- |
+| **1** | Project setup, navigation, data fetching           |
+| **2** | Chat list, chat room, animated tab bar             |
+| **3** | Block/unblock, bottom sheet, snackbar, persistence |
+| **4** | Code cleanup, testing, documentation               |
 
 #### What is Vibe Coding?
 
-Vibe coding is a development approach where you:
+A development approach where:
 
-- **Focus on the "what" and "why"** — describing features, architecture decisions, and desired outcomes
-- **Let AI handle the "how"** — implementation details, boilerplate, and repetitive patterns
-- **Iterate through conversation** — refining and improving through natural dialogue
+- **Human decides the "what" and "why"** — Architecture, UX decisions, feature scope
+- **AI handles the "how"** — Implementation, boilerplate, repetitive patterns
+- **Iterate through conversation** — "Make the snackbar a centered pill", "Rename colors by role"
 
-#### The Process
+**Further Reading:**
 
-**Day 1: Foundation**
+- [Vibe Coding](https://en.wikipedia.org/wiki/Vibe_coding) — Overview of AI-assisted development
+- [AI Pair Programming](https://github.blog/2022-09-07-research-quantifying-github-copilots-impact-on-developer-productivity-and-happiness/) — GitHub's research on AI coding assistants
 
-- Set up React Native project with TypeScript
-- Configured navigation structure (Bottom Tabs + Stack Navigators)
-- Implemented basic screens and data fetching with React Query
-
-**Day 2: Core Features**
-
-- Built chat list with skeleton loading
-- Implemented chat room with message bubbles
-- Created animated tab bar with hide/show behavior
-- Added user profile screen with contact actions
-
-**Day 3: Polish & UX**
-
-- Implemented block/unblock functionality
-- Created draggable bottom sheet component
-- Added snackbar notifications
-- Built user switching for testing
-- Persisted data with AsyncStorage
-
-**Day 4: Refinement**
-
-- Standardized code patterns (named exports, function declarations)
-- Cleaned up colors and constants
-- Wrote comprehensive tests
-- Created documentation
-
-#### Key Takeaways
-
-1. **Speed without sacrificing quality** — AI assistance allowed rapid implementation while maintaining clean architecture and best practices.
-
-2. **Human decisions, AI execution** — Every architectural decision (module structure, state management choice, custom vs library components) was a human choice. AI helped execute those decisions consistently.
-
-3. **Iterative refinement** — The conversation-based workflow made it easy to refine details: "make the snackbar a centered pill" or "rename colors based on their role."
-
-4. **Learning accelerator** — Building custom components (animations, gestures, persistence) provided deeper understanding of React Native internals than using pre-built libraries.
-
-#### Tools Used
+#### Tools
 
 - **[Cursor](https://cursor.sh)** — AI-powered code editor
-- **Claude** — AI assistant for pair programming
+- **[Claude](https://anthropic.com/claude)** — AI pair programmer
 
 ---
 
-_This project demonstrates that with the right tools and approach, a single developer can build a polished, production-quality mobile app in under a week._
+_This project demonstrates that a single developer with the right tools can build a polished mobile app in under a week._
 
 ## License
 
