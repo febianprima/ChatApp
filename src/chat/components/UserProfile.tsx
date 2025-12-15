@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   },
   username: {
     fontSize: 12,
-    color: colors.secondaryDark,
+    color: colors.accent,
   },
   lastSeenDate: {
     fontSize: 12,

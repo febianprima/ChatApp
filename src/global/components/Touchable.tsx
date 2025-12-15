@@ -27,8 +27,8 @@ export function Touchable({
   onLongPress,
   disabled = false,
   style,
-  rippleColor = colors.touchable,
-  underlayColor = colors.touchable,
+  rippleColor = colors.ripple,
+  underlayColor = colors.ripple,
   type = 'default',
 }: TouchableProps) {
   if (Platform.OS === 'android') {

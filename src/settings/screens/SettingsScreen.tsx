@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   switchUserText: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.white,
+    color: colors.textOnAccent,
   },
   version: {
     fontSize: 12,

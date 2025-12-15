@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   },
   username: {
     fontSize: 16,
-    color: colors.secondaryDark,
+    color: colors.accent,
   },
   details: {
     gap: 16,

@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   bubbleOwn: {
-    backgroundColor: colors.secondaryDark,
+    backgroundColor: colors.accent,
     borderBottomRightRadius: 4,
   },
   bubbleOther: {
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 4,
   },
   titleOwn: {
-    color: colors.white,
+    color: colors.textOnAccent,
   },
   body: {
     fontSize: 14,
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   bodyOwn: {
-    color: colors.white,
+    color: colors.textOnAccent,
     opacity: 0.9,
   },
   time: {
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   timeOwn: {
-    color: colors.white,
+    color: colors.textOnAccent,
     opacity: 0.7,
   },
 });

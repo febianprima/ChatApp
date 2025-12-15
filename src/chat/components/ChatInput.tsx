@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   },
   sendIcon: {
     fontSize: 20,
-    color: colors.white,
+    color: colors.textOnAccent,
     textAlign: 'center',
     textAlignVertical: 'center',
   },
