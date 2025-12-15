@@ -50,7 +50,6 @@ const ChatListItem = memo(({ data }: ChatListItemProps) => {
 
     return (
       <View style={styles.content}>
-        <Text style={styles.title}>{lastPost?.title}</Text>
         <Text style={styles.body} numberOfLines={2}>
           {lastPost?.body}
         </Text>
@@ -98,11 +97,6 @@ const styles = StyleSheet.create({
   },
   content: {
     gap: 8,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: colors.textPrimary,
   },
   body: {
     fontSize: 14,

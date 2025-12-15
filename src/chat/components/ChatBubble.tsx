@@ -11,12 +11,11 @@ interface ChatBubbleProps {
 
 export const ChatBubble = memo(({ post, isOwn }: ChatBubbleProps) => {
   const formatDate = useFormatDate();
-  const { title, body, createdAt } = post;
+  const { body, createdAt } = post;
 
   return (
     <View style={[styles.container, isOwn ? styles.containerOwn : styles.containerOther]}>
       <View style={[styles.bubble, isOwn ? styles.bubbleOwn : styles.bubbleOther]}>
-        <Text style={[styles.title, isOwn && styles.titleOwn]}>{title}</Text>
         <Text style={[styles.body, isOwn && styles.bodyOwn]}>{body}</Text>
         <Text style={[styles.time, isOwn && styles.timeOwn]}>{formatDate(createdAt)}</Text>
       </View>
@@ -48,11 +47,6 @@ const styles = StyleSheet.create({
   bubbleOther: {
     backgroundColor: colors.border,
     borderBottomLeftRadius: 4,
-  },
-  title: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: colors.textPrimary,
   },
   titleOwn: {
     color: colors.white,

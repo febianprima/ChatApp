@@ -1,9 +1,14 @@
 import { HeaderBackButton } from '@react-navigation/elements';
 import React from 'react';
-import { ActivityIndicator, Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { BottomSheet, Touchable, UserDetailsCard } from '../../global/components';
+import {
+  BottomSheet,
+  Touchable,
+  UserDetailsCard,
+  UserDetailsCardSkeleton,
+} from '../../global/components';
 import { colors } from '../../global/constants';
 
 import { useProfileScreen } from '../hooks';
@@ -23,7 +28,18 @@ export function ProfileScreen() {
   } = useProfileScreen();
 
   if (isLoading) {
-    return <ActivityIndicator size="large" color={colors.primary} />;
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.headerLeft}>
+            {canGoBack() && <HeaderBackButton onPress={goBack} tintColor={colors.textPrimary} />}
+          </View>
+        </View>
+        <View style={styles.content}>
+          <UserDetailsCardSkeleton showContactItems contactItemsCount={3} />
+        </View>
+      </SafeAreaView>
+    );
   }
 
   if (!userData) {

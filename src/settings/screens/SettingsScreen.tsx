@@ -1,10 +1,15 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 
 import useGetUser from '../../chat/queries/useGetUser';
 import useGetUsers from '../../chat/queries/useGetUsers';
-import { BottomSheet, Touchable, UserDetailsCard } from '../../global/components';
+import {
+  BottomSheet,
+  Touchable,
+  UserDetailsCard,
+  UserDetailsCardSkeleton,
+} from '../../global/components';
 import { colors } from '../../global/constants';
 import { useGlobalStore } from '../../global/store';
 
@@ -31,7 +36,9 @@ export function SettingsScreen() {
   if (isLoading) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color={colors.primary} />
+        <View style={styles.content}>
+          <UserDetailsCardSkeleton showContactItems={false} />
+        </View>
       </View>
     );
   }
