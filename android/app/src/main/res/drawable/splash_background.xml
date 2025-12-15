@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background color -->
+    <item android:drawable="@color/splash_background" />
+    
+    <!-- Chat bubble icon centered -->
+    <item
+        android:drawable="@drawable/ic_chat_bubble"
+        android:gravity="center"
+        android:width="112dp"
+        android:height="112dp" />
+</layer-list>

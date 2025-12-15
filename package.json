@@ -1,6 +1,6 @@
 {
   "name": "ChatApp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -20,7 +20,10 @@
     "version:patch": "npm version patch --no-git-tag-version && yarn version:sync",
     "version:minor": "npm version minor --no-git-tag-version && yarn version:sync",
     "version:major": "npm version major --no-git-tag-version && yarn version:sync",
-    "version:sync": "node scripts/sync-version.js"
+    "version:sync": "node scripts/sync-version.js",
+    "build:android:debug": "cd android && ./gradlew assembleDebug",
+    "build:android:release": "cd android && ./gradlew assembleRelease",
+    "build:android:clean": "cd android && ./gradlew clean"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.2.0",

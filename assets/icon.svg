@@ -1,0 +1,17 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1024" height="1024" fill="#007AFF"/>
+  
+  <!-- Chat bubble -->
+  <path d="M512 200C330 200 180 320 180 480C180 570 220 650 290 710L290 820L410 755C445 765 485 770 512 770C694 770 844 650 844 490C844 320 694 200 512 200Z" fill="white"/>
+  
+  <!-- Dot 1 -->
+  <circle cx="380" cy="490" r="45" fill="#007AFF"/>
+  
+  <!-- Dot 2 -->
+  <circle cx="512" cy="490" r="45" fill="#007AFF"/>
+  
+  <!-- Dot 3 -->
+  <circle cx="644" cy="490" r="45" fill="#007AFF"/>
+</svg>
+

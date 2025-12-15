@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp"
+    android:height="96dp"
+    android:viewportWidth="1024"
+    android:viewportHeight="1024">
+    
+    <!-- Chat bubble -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M512,200 C330,200 180,320 180,480 C180,570 220,650 290,710 L290,820 L410,755 C445,765 485,770 512,770 C694,770 844,650 844,490 C844,320 694,200 512,200 Z"/>
+    
+    <!-- Dot 1 -->
+    <path
+        android:fillColor="#007AFF"
+        android:pathData="M380,490 m-45,0 a45,45 0,1 1,90 0 a45,45 0,1 1,-90 0"/>
+    
+    <!-- Dot 2 -->
+    <path
+        android:fillColor="#007AFF"
+        android:pathData="M512,490 m-45,0 a45,45 0,1 1,90 0 a45,45 0,1 1,-90 0"/>
+    
+    <!-- Dot 3 -->
+    <path
+        android:fillColor="#007AFF"
+        android:pathData="M644,490 m-45,0 a45,45 0,1 1,90 0 a45,45 0,1 1,-90 0"/>
+</vector>
