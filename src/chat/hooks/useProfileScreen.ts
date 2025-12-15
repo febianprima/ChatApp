@@ -3,6 +3,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useCallback, useMemo, useState } from 'react';
 import { Alert, Linking } from 'react-native';
 
+import { useSnackbarStore } from '../../global/store';
+
 import { useGetUser } from '../queries';
 import { useChatStore } from '../store';
 
@@ -10,6 +12,7 @@ export function useProfileScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<chat.ChatStackParamList>>();
   const { canGoBack, goBack, popToTop, replace } = navigation;
   const { blockedUsers, blockUser, unblockUser } = useChatStore();
+  const showSnackbar = useSnackbarStore(state => state.show);
 
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const { data: userData, isLoading } = useGetUser();
@@ -51,10 +54,10 @@ export function useProfileScreen() {
   const handleBlockUserConfirm = useCallback(() => {
     if (userData?.id) {
       blockUser(userData.id);
-      Alert.alert('Blocked', 'User has been blocked');
+      showSnackbar(`${userData.name} has been blocked`, 'info');
       popToTop();
     }
-  }, [userData?.id, blockUser, popToTop]);
+  }, [userData?.id, userData?.name, blockUser, showSnackbar, popToTop]);
 
   const handleBlockUser = useCallback(() => {
     Alert.alert('Block User', `Are you sure you want to block ${userData?.name}?`, [
@@ -66,10 +69,10 @@ export function useProfileScreen() {
   const handleUnblockUser = useCallback(() => {
     if (userData?.id) {
       unblockUser(userData.id);
-      Alert.alert('Unblocked', 'User has been unblocked');
+      showSnackbar(`${userData.name} has been unblocked`, 'success');
       replace('ChatRoom');
     }
-  }, [userData?.id, unblockUser, replace]);
+  }, [userData?.id, userData?.name, unblockUser, showSnackbar, replace]);
 
   // Menu options
   const menuOptions: global.BottomSheetOption[] = useMemo(() => {

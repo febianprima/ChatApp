@@ -4,6 +4,7 @@ import React from 'react';
 import { StatusBar, useColorScheme } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { Snackbar } from './src/global/components';
 import { queryClient } from './src/global/config/queryClient';
 import { BottomTabNavigator } from './src/global/navigation/BottomTabNavigator';
 
@@ -17,6 +18,7 @@ function App() {
         <NavigationContainer>
           <BottomTabNavigator />
         </NavigationContainer>
+        <Snackbar />
       </SafeAreaProvider>
     </QueryClientProvider>
   );

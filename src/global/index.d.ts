@@ -14,6 +14,21 @@ declare namespace global {
   }
   //#endregion
 
+  //#region snackbar type
+  type SnackbarType = 'info' | 'success' | 'error';
+
+  interface SnackbarState {
+    visible: boolean;
+    message: string;
+    type: SnackbarType;
+  }
+
+  interface SnackbarStore extends SnackbarState {
+    show: (message: string, type?: SnackbarType) => void;
+    hide: () => void;
+  }
+  //#endregion
+
   //#region components type
   interface BottomSheetOption {
     icon?: string;
