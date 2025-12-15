@@ -3,7 +3,7 @@ import { Image, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
 import { colors } from '../../global/constants';
 
-import { useChatStore } from '../store/useChatStore';
+import { useChatStore } from '../store';
 
 import { NewChatButton } from './NewChatButton';
 

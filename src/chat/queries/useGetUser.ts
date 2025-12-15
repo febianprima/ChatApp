@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { BASE_URL } from '../../global/constants';
 import { useGlobalStore } from '../../global/store';
 
-import { useChatStore } from '../store/useChatStore';
+import { useChatStore } from '../store';
 
 const fetchUser = async ({ userId }: { userId: number | null }) => {
   try {
@@ -22,7 +22,9 @@ const fetchUser = async ({ userId }: { userId: number | null }) => {
   }
 };
 
-const useGetUser = ({ isAuthenticatedUser = false }: { isAuthenticatedUser?: boolean } = {}) => {
+export function useGetUser({
+  isAuthenticatedUser = false,
+}: { isAuthenticatedUser?: boolean } = {}) {
   const { userId: authenticatedUserId } = useGlobalStore();
   const { selectedContactUser } = useChatStore();
 
@@ -38,6 +40,4 @@ const useGetUser = ({ isAuthenticatedUser = false }: { isAuthenticatedUser?: boo
   });
 
   return { data, isLoading, error };
-};
-
-export default useGetUser;
+}

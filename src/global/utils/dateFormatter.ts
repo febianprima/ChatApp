@@ -9,9 +9,9 @@ type DateInput = string | number | Date;
 /**
  * Get current device timezone
  */
-export const getDeviceTimezone = (): string => {
+export function getDeviceTimezone(): string {
   return Intl.DateTimeFormat().resolvedOptions().timeZone;
-};
+}
 
 /**
  * Format date contextually based on recency:
@@ -22,7 +22,7 @@ export const getDeviceTimezone = (): string => {
  * @param date - Date to format
  * @param timezone - Optional timezone (defaults to device timezone)
  */
-export const formatDate = (date: DateInput, timezone: string = getDeviceTimezone()): string => {
+export function formatDate(date: DateInput, timezone: string = getDeviceTimezone()): string {
   const d = new Date(date);
   const now = new Date();
 
@@ -60,4 +60,4 @@ export const formatDate = (date: DateInput, timezone: string = getDeviceTimezone
   }).format(d);
 
   return `${dateString}, ${timeString}`;
-};
+}

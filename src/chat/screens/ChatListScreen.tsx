@@ -3,9 +3,8 @@ import { FlatList, StyleSheet, View } from 'react-native';
 
 import { colors } from '../../global/constants';
 
-import ChatListItem from '../components/ChatListItem';
-import { ChatListSkeleton } from '../components/ChatListSkeleton';
-import useGetUsers from '../queries/useGetUsers';
+import { ChatListItem, ChatListSkeleton } from '../components';
+import { useGetUsers } from '../queries';
 
 const ITEM_HEIGHT = 140; // Approximate height for getItemLayout
 

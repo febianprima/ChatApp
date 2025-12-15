@@ -2,23 +2,10 @@ import { useMemo, useRef } from 'react';
 
 import { useGlobalStore } from '../../global/store';
 
-import useGetUserPosts from '../queries/useGetUserPosts';
-import { useChatStore } from '../store/useChatStore';
+import { useGetUserPosts } from '../queries';
+import { useChatStore } from '../store';
 
 const NEW_MESSAGE_THRESHOLD_MS = 2000; // Messages less than 2 seconds old are "new"
-
-export interface ChatMessage extends chat.Post {
-  isOwn: boolean;
-  isNew?: boolean;
-}
-
-export interface DateSeparatorItem {
-  type: 'separator';
-  id: string;
-  label: string;
-}
-
-export type ChatListItem = (ChatMessage & { type: 'message' }) | DateSeparatorItem;
 
 /**
  * Get date label for grouping
@@ -47,10 +34,13 @@ function getDateLabel(date: Date): string {
 }
 
 /**
- * Get date key for grouping (YYYY-MM-DD)
+ * Get date key for grouping (YYYY-MM-DD) in local timezone
  */
 function getDateKey(date: Date): string {
-  return date.toISOString().split('T')[0];
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 export function useChatRoomMessages() {
@@ -73,7 +63,7 @@ export function useChatRoomMessages() {
   });
 
   // Combine, sort, and group messages by date
-  const items: ChatListItem[] = useMemo(() => {
+  const items: chat.ChatListItem[] = useMemo(() => {
     const contactPosts = contactPostsData?.results ?? [];
     const ownPosts = ownPostsData?.results ?? [];
 
@@ -98,7 +88,7 @@ export function useChatRoomMessages() {
     const allContactPosts = [...uniquePersistedContactMessages, ...contactPosts];
 
     const now = Date.now();
-    const allMessages: ChatMessage[] = [
+    const allMessages: chat.ChatMessage[] = [
       ...allContactPosts.map(post => ({
         ...post,
         isOwn: false,
@@ -123,7 +113,7 @@ export function useChatRoomMessages() {
 
     // Group by date and insert separators
     // Since FlatList is inverted, separators go AFTER messages to appear ABOVE them
-    const result: ChatListItem[] = [];
+    const result: chat.ChatListItem[] = [];
 
     for (let i = 0; i < allMessages.length; i++) {
       const message = allMessages[i];

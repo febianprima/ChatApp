@@ -3,7 +3,7 @@ import React from 'react';
 
 import { colors } from '../../global/constants';
 
-import ChatRoomHeader from '../components/ChatRoomHeader';
+import { ChatRoomHeader } from '../components';
 import { ChatListScreen, ChatRoomScreen, ProfileScreen } from '../screens';
 
 const Stack = createNativeStackNavigator<chat.ChatStackParamList>();

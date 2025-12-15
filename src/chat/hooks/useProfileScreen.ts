@@ -3,8 +3,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useCallback, useMemo, useState } from 'react';
 import { Alert, Linking } from 'react-native';
 
-import useGetUser from '../queries/useGetUser';
-import { useChatStore } from '../store/useChatStore';
+import { useGetUser } from '../queries';
+import { useChatStore } from '../store';
 
 export function useProfileScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<chat.ChatStackParamList>>();

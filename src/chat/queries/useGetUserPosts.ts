@@ -21,7 +21,7 @@ const fetchUserPosts = async ({ userId }: { userId: number }) => {
   }
 };
 
-const useGetUserPosts = ({ userId }: { userId: number }) => {
+export function useGetUserPosts({ userId }: { userId: number }) {
   const { data, isLoading, error } = useQuery({
     queryKey: ['userPosts', userId],
     queryFn: () => fetchUserPosts({ userId }),
@@ -31,6 +31,4 @@ const useGetUserPosts = ({ userId }: { userId: number }) => {
   const lastPost = getLastPost(posts);
 
   return { data, lastPost, isLoading, error };
-};
-
-export default useGetUserPosts;
+}

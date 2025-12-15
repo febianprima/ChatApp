@@ -6,12 +6,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors } from '../../global/constants';
 
-import useGetUser from '../queries/useGetUser';
+import { useGetUser } from '../queries';
 
-import ChatRoomHeaderSkeleton from './ChatRoomHeaderSkeleton';
+import { ChatRoomHeaderSkeleton } from './ChatRoomHeaderSkeleton';
 import { UserProfile } from './UserProfile';
 
-function ChatRoomHeader({ navigation }: NativeStackHeaderProps) {
+export function ChatRoomHeader({ navigation }: NativeStackHeaderProps) {
   const { data: userData, isLoading: isUserDataLoading } = useGetUser();
 
   const { top } = useSafeAreaInsets();
@@ -59,5 +59,3 @@ const styles = StyleSheet.create({
     }),
   },
 });
-
-export default ChatRoomHeader;

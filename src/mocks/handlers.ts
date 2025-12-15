@@ -27,7 +27,7 @@ export const mockProducts = {
 };
 
 // Helper to create mock responses based on URL
-export const createMockResponse = (url: string): string | null => {
+export function createMockResponse(url: string): string | null {
   if (url.includes('/api/users')) {
     return JSON.stringify(mockUsers);
   }
@@ -38,4 +38,4 @@ export const createMockResponse = (url: string): string | null => {
     return JSON.stringify(mockProducts);
   }
   return null;
-};
+}

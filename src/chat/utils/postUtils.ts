@@ -3,7 +3,7 @@
  * @param posts - Array of posts to search
  * @returns The most recent post, or undefined if array is empty
  */
-export const getLastPost = (posts: chat.Post[]): chat.Post | undefined => {
+export function getLastPost(posts: chat.Post[]): chat.Post | undefined {
   if (!posts || posts.length === 0) {
     return undefined;
   }
@@ -13,4 +13,4 @@ export const getLastPost = (posts: chat.Post[]): chat.Post | undefined => {
     const currentDate = new Date(current.createdAt).getTime();
     return currentDate > latestDate ? current : latest;
   });
-};
+}

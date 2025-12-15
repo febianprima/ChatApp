@@ -77,5 +77,18 @@ declare namespace chat {
     value: string;
     onPress: () => void;
   }
+
+  interface ChatMessage extends Post {
+    isOwn: boolean;
+    isNew?: boolean;
+  }
+
+  interface DateSeparatorItem {
+    type: 'separator';
+    id: string;
+    label: string;
+  }
+
+  type ChatListItem = (ChatMessage & { type: 'message' }) | DateSeparatorItem;
   //#endregion
 }

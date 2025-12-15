@@ -7,8 +7,8 @@ import { Shimmer, Touchable } from '../../global/components';
 import { colors } from '../../global/constants';
 import { useFormatDate } from '../../global/hooks';
 
-import useGetUserPosts from '../queries/useGetUserPosts';
-import { useChatStore } from '../store/useChatStore';
+import { useGetUserPosts } from '../queries';
+import { useChatStore } from '../store';
 
 import { ChatListItemContentSkeleton } from './ChatListItemContentSkeleton';
 import { UserProfile } from './UserProfile';
@@ -17,7 +17,7 @@ interface ChatListItemProps {
   data: chat.User;
 }
 
-const ChatListItem = memo(({ data }: ChatListItemProps) => {
+function ChatListItemComponent({ data }: ChatListItemProps) {
   const navigation = useNavigation<NativeStackNavigationProp<chat.ChatStackParamList>>();
   const formatDate = useFormatDate();
   const { id: userId, name, username, avatar } = data;
@@ -85,7 +85,9 @@ const ChatListItem = memo(({ data }: ChatListItemProps) => {
       {renderLastMessage}
     </Touchable>
   );
-});
+}
+
+export const ChatListItem = memo(ChatListItemComponent);
 
 const styles = StyleSheet.create({
   container: {
@@ -103,5 +105,3 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
   },
 });
-
-export default ChatListItem;

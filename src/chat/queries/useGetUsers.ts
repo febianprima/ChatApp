@@ -3,11 +3,9 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { BASE_URL } from '../../global/constants/api';
 import { useGlobalStore } from '../../global/store/globalStore';
 
-const LIMIT = 10;
-
 const fetchUsers = async ({ pageParam = 0 }: { pageParam?: number }) => {
   try {
-    const response: Response = await fetch(`${BASE_URL}/users?offset=${pageParam}&limit=${LIMIT}`);
+    const response: Response = await fetch(`${BASE_URL}/users?offset=${pageParam}&limit=10`);
 
     if (!response.ok) {
       throw new Error('Failed to fetch users');
@@ -22,7 +20,7 @@ const fetchUsers = async ({ pageParam = 0 }: { pageParam?: number }) => {
   }
 };
 
-const useGetUsers = ({ includeCurrentUser = false }: { includeCurrentUser?: boolean } = {}) => {
+export function useGetUsers({ includeCurrentUser = false }: { includeCurrentUser?: boolean } = {}) {
   const { userId: currentUserId } = useGlobalStore();
 
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -53,6 +51,4 @@ const useGetUsers = ({ includeCurrentUser = false }: { includeCurrentUser?: bool
     hasNextPage,
     isFetchingNextPage,
   };
-};
-
-export default useGetUsers;
+}

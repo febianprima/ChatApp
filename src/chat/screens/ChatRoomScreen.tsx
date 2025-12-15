@@ -10,23 +10,21 @@ import {
 
 import { colors } from '../../global/constants';
 
-import { ChatBubble } from '../components/ChatBubble';
-import { ChatInput } from '../components/ChatInput';
-import { DateSeparator } from '../components/DateSeparator';
-import { ChatListItem, useChatRoomMessages } from '../hooks/useChatRoomMessages';
+import { ChatBubble, ChatInput, DateSeparator } from '../components';
+import { useChatRoomMessages } from '../hooks';
 
 export function ChatRoomScreen() {
   const flatListRef = useRef<FlatList>(null);
   const { items, isLoading } = useChatRoomMessages();
 
-  const renderItem = useCallback(({ item }: { item: ChatListItem }) => {
+  const renderItem = useCallback(({ item }: { item: chat.ChatListItem }) => {
     if (item.type === 'separator') {
       return <DateSeparator label={item.label} />;
     }
     return <ChatBubble post={item} isOwn={item.isOwn} isNew={item.isNew} />;
   }, []);
 
-  const keyExtractor = useCallback((item: ChatListItem) => {
+  const keyExtractor = useCallback((item: chat.ChatListItem) => {
     if (item.type === 'separator') {
       return item.id;
     }

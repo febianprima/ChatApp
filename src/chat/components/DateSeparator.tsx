@@ -7,13 +7,15 @@ interface DateSeparatorProps {
   label: string;
 }
 
-export const DateSeparator = memo(({ label }: DateSeparatorProps) => {
+function DateSeparatorComponent({ label }: DateSeparatorProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
     </View>
   );
-});
+}
+
+export const DateSeparator = memo(DateSeparatorComponent);
 
 const styles = StyleSheet.create({
   container: {

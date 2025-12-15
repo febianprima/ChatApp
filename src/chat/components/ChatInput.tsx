@@ -6,9 +6,9 @@ import { Touchable } from '../../global/components';
 import { colors } from '../../global/constants';
 import { useGlobalStore } from '../../global/store';
 
-import usePostChatMessage from '../queries/usePostChat';
+import { usePostChatMessage } from '../queries';
 
-export const ChatInput = memo(() => {
+function ChatInputComponent() {
   const [message, setMessage] = useState('');
   const { bottom } = useSafeAreaInsets();
 
@@ -50,7 +50,9 @@ export const ChatInput = memo(() => {
       </View>
     </View>
   );
-});
+}
+
+export const ChatInput = memo(ChatInputComponent);
 
 const styles = StyleSheet.create({
   container: {

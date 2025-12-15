@@ -25,7 +25,6 @@ interface BottomSheetProps {
 }
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
-const CLOSE_THRESHOLD = 100; // Pixels to drag before closing
 
 export function BottomSheet({
   visible,
@@ -92,7 +91,7 @@ export function BottomSheet({
         }
       },
       onPanResponderRelease: (_, gestureState) => {
-        if (gestureState.dy > CLOSE_THRESHOLD || gestureState.vy > 0.5) {
+        if (gestureState.dy > 100 || gestureState.vy > 0.5) {
           // Close if dragged far enough or fast enough
           animateClose();
         } else {

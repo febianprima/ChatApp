@@ -4,22 +4,17 @@ import { Animated, StyleSheet, Text } from 'react-native';
 import { colors } from '../../global/constants';
 import { useFormatDate } from '../../global/hooks';
 
-const ANIMATION_DURATION = 300;
-const SLIDE_DISTANCE = 50;
-
 interface ChatBubbleProps {
   post: chat.Post;
   isOwn: boolean;
   isNew?: boolean;
 }
 
-export const ChatBubble = memo(({ post, isOwn, isNew = false }: ChatBubbleProps) => {
+function ChatBubbleComponent({ post, isOwn, isNew = false }: ChatBubbleProps) {
   const formatDate = useFormatDate();
   const { body, createdAt } = post;
 
-  const slideAnim = useRef(
-    new Animated.Value(isNew ? (isOwn ? SLIDE_DISTANCE : -SLIDE_DISTANCE) : 0),
-  ).current;
+  const slideAnim = useRef(new Animated.Value(isNew ? (isOwn ? 50 : -50) : 0)).current;
   const opacityAnim = useRef(new Animated.Value(isNew ? 0 : 1)).current;
   const scaleAnim = useRef(new Animated.Value(isNew ? 0.8 : 1)).current;
 
@@ -34,7 +29,7 @@ export const ChatBubble = memo(({ post, isOwn, isNew = false }: ChatBubbleProps)
         }),
         Animated.timing(opacityAnim, {
           toValue: 1,
-          duration: ANIMATION_DURATION,
+          duration: 300,
           useNativeDriver: true,
         }),
         Animated.spring(scaleAnim, {
@@ -63,7 +58,9 @@ export const ChatBubble = memo(({ post, isOwn, isNew = false }: ChatBubbleProps)
       </Animated.View>
     </Animated.View>
   );
-});
+}
+
+export const ChatBubble = memo(ChatBubbleComponent);
 
 const styles = StyleSheet.create({
   container: {

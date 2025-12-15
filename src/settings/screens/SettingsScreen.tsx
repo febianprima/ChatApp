@@ -2,8 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 
-import useGetUser from '../../chat/queries/useGetUser';
-import useGetUsers from '../../chat/queries/useGetUsers';
+import { useGetUser, useGetUsers } from '../../chat/queries';
 import {
   BottomSheet,
   Touchable,

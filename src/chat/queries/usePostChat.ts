@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { queryClient } from '../../global/config';
 import { BASE_URL } from '../../global/constants';
 
-import { useChatStore } from '../store/useChatStore';
+import { useChatStore } from '../store';
 
 const postChatMessage = async (chatMessage: Omit<chat.PostMessage, 'title'>) => {
   if (!chatMessage.userId) {
@@ -28,7 +28,7 @@ const postChatMessage = async (chatMessage: Omit<chat.PostMessage, 'title'>) => 
 // Generate unique local ID for sent messages
 const generateLocalId = () => Date.now() + Math.floor(Math.random() * 10000);
 
-const usePostChatMessage = () => {
+export function usePostChatMessage() {
   const { mutate, isPending } = useMutation({
     mutationFn: (chatMessage: Omit<chat.PostMessage, 'title'>) => postChatMessage(chatMessage),
     onSuccess: (newPost: chat.Post, { userId }) => {
@@ -59,6 +59,4 @@ const usePostChatMessage = () => {
   });
 
   return { mutate, isPending };
-};
-
-export default usePostChatMessage;
+}

@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Shimmer } from '../../global/components';
 import { colors } from '../../global/constants';
 
-function ChatRoomHeaderSkeleton({
+export function ChatRoomHeaderSkeleton({
   navigation,
 }: {
   navigation: NativeStackHeaderProps['navigation'];
@@ -54,5 +54,3 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
 });
-
-export default ChatRoomHeaderSkeleton;
