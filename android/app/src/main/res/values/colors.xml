@@ -3,6 +3,7 @@
     <color name="splash_background">#007AFF</color>
     <color name="primary">#007AFF</color>
     <color name="primary_dark">#007AFF</color>
+    <color name="background">#F2F2F7</color>
     <color name="white">#FFFFFF</color>
 </resources>
 

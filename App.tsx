@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
-import { Platform, StatusBar } from 'react-native';
+import { StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { Snackbar } from './src/global/components';
@@ -13,11 +13,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
-        <StatusBar
-          barStyle="dark-content"
-          backgroundColor={colors.primary}
-          translucent={Platform.OS === 'android'}
-        />
+        <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
         <NavigationContainer>
           <BottomTabNavigator />
         </NavigationContainer>
